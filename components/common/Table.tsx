@@ -59,7 +59,7 @@ const Table = <T extends { id: string }>(
   }, [data, sortColumn, sortDirection, columns]);
 
   return (
-    <div className="overflow-x-auto bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+    <div className="overflow-x-auto bg-white dark:bg-slate-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark">
       <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
         <thead className="bg-slate-50 dark:bg-slate-700/50">
           <tr>

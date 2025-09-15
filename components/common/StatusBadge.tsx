@@ -7,7 +7,7 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ className, children }) => (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${className}`}>
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium shadow-sm ${className}`}>
         {children}
     </span>
 );

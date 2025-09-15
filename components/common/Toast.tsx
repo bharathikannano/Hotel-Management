@@ -48,7 +48,7 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
 
   return (
     <div
-      className={`max-w-sm w-full ${config.bg} shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden border-l-4 ${config.border} animate-fade-in-right`}
+      className={`max-w-sm w-full ${config.bg} shadow-xl rounded-2xl pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden border-l-4 ${config.border} animate-fade-in-right`}
       role="alert"
       aria-live="assertive"
       aria-atomic="true"

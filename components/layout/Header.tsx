@@ -12,7 +12,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentPage, user, onToggleSidebar, theme, onThemeChange }) => {
     return (
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex justify-between items-center sticky top-0 z-30">
+        <header className="bg-white dark:bg-slate-800 shadow-lg p-4 flex justify-between items-center sticky top-0 z-30">
             <div className="flex items-center">
                 <button onClick={onToggleSidebar} className="md:hidden mr-4 text-slate-500 dark:text-slate-400">
                     <MenuIcon className="w-6 h-6" />
@@ -20,14 +20,14 @@ const Header: React.FC<HeaderProps> = ({ currentPage, user, onToggleSidebar, the
                 <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200">{currentPage}</h2>
             </div>
             <div className="flex items-center space-x-4">
-                <div className="flex p-1 bg-slate-200 dark:bg-slate-700 rounded-lg">
-                    <button onClick={() => onThemeChange('light')} className={`p-1.5 rounded-md ${theme === 'light' ? 'bg-white dark:bg-slate-800 shadow' : ''}`}>
+                <div className="flex p-1 bg-slate-200 dark:bg-slate-700 rounded-2xl">
+                    <button onClick={() => onThemeChange('light')} className={`p-1.5 rounded-xl ${theme === 'light' ? 'bg-white dark:bg-slate-600 shadow-lg' : ''}`}>
                         <SunIcon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                     </button>
-                    <button onClick={() => onThemeChange('dark')} className={`p-1.5 rounded-md ${theme === 'dark' ? 'bg-white dark:bg-slate-800 shadow' : ''}`}>
+                    <button onClick={() => onThemeChange('dark')} className={`p-1.5 rounded-xl ${theme === 'dark' ? 'bg-white dark:bg-slate-600 shadow-lg' : ''}`}>
                          <MoonIcon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                     </button>
-                    <button onClick={() => onThemeChange('system')} className={`p-1.5 rounded-md ${theme === 'system' ? 'bg-white dark:bg-slate-800 shadow' : ''}`}>
+                    <button onClick={() => onThemeChange('system')} className={`p-1.5 rounded-xl ${theme === 'system' ? 'bg-white dark:bg-slate-600 shadow-lg' : ''}`}>
                         <SystemIcon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                     </button>
                 </div>

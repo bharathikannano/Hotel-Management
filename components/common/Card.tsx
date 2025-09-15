@@ -9,7 +9,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ children, className = '', title, actions }) => {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm ${className}`}>
+    <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark ${className}`}>
       {(title || actions) && (
         <div className="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700">
           {title && <h3 className="font-semibold text-slate-800 dark:text-slate-200">{title}</h3>}

@@ -108,13 +108,13 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-solid-light dark:shadow-solid-dark">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={handlePrevMonth} className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded">&lt; Prev</button>
+        <button onClick={handlePrevMonth} className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg">&lt; Prev</button>
         <h3 className="text-lg font-semibold dark:text-slate-200">
           {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
         </h3>
-        <button onClick={handleNextMonth} className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded">Next &gt;</button>
+        <button onClick={handleNextMonth} className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg">Next &gt;</button>
       </div>
       <div className="overflow-x-auto relative">
         <table className="min-w-full border-collapse border border-slate-200 dark:border-slate-700">

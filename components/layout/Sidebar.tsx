@@ -35,9 +35,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, user, onNavigate, onLogo
                         <a
                             href="#"
                             onClick={(e) => { e.preventDefault(); onNavigate(item.page); }}
-                            className={`flex items-center p-3 my-1 rounded-lg transition-colors ${
+                            className={`flex items-center p-3 my-1 rounded-xl transition-colors ${
                                 currentPage === item.page
-                                    ? 'bg-brand-600 text-white'
+                                    ? 'bg-brand-600 text-white shadow-lg'
                                     : 'hover:bg-slate-700 hover:text-white'
                             }`}
                         >
@@ -52,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, user, onNavigate, onLogo
             <a
                 href="#"
                 onClick={(e) => { e.preventDefault(); onLogout(); }}
-                className="flex items-center p-3 rounded-lg hover:bg-slate-700 hover:text-white"
+                className="flex items-center p-3 rounded-xl hover:bg-slate-700 hover:text-white"
             >
                 <LogoutIcon className="w-6 h-6 mr-3" />
                 <span>Logout</span>

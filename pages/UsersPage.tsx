@@ -72,8 +72,8 @@ const UserForm = ({ onSave, onCancel }: { onSave: (data: Omit<User, 'id' | 'avat
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Avatar (Optional)</label>
                 <div className="flex items-center gap-4">
                      <div className="flex p-1 bg-slate-200 dark:bg-slate-700 rounded-lg">
-                        <button type="button" onClick={() => switchAvatarInputType('url')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'url' ? 'bg-white dark:bg-slate-800 text-brand-700 dark:text-brand-300 shadow' : 'text-slate-600 dark:text-slate-300'}`}>URL</button>
-                        <button type="button" onClick={() => switchAvatarInputType('upload')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'upload' ? 'bg-white dark:bg-slate-800 text-brand-700 dark:text-brand-300 shadow' : 'text-slate-600 dark:text-slate-300'}`}>Upload</button>
+                        <button type="button" onClick={() => switchAvatarInputType('url')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'url' ? 'bg-white dark:bg-slate-600 text-brand-700 dark:text-brand-300 shadow' : 'text-slate-600 dark:text-slate-300'}`}>URL</button>
+                        <button type="button" onClick={() => switchAvatarInputType('upload')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'upload' ? 'bg-white dark:bg-slate-600 text-brand-700 dark:text-brand-300 shadow' : 'text-slate-600 dark:text-slate-300'}`}>Upload</button>
                     </div>
                     {avatarPreview && <img src={avatarPreview} alt="Avatar Preview" className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"/>}
                 </div>

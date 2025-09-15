@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         onClick={onClose}
     >
       <div 
-        className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-full overflow-y-auto animate-zoom-in-95"
+        className="bg-white dark:bg-slate-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-full overflow-y-auto animate-zoom-in-95"
         onClick={(e) => e.stopPropagation()}
     >
         <div className="flex justify-between items-center p-4 border-b dark:border-slate-700">
