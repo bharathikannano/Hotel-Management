@@ -10,24 +10,24 @@ interface ToastProps {
 const toastConfig = {
   success: {
     Icon: SuccessIcon,
-    bg: 'bg-green-100 dark:bg-green-900/70',
-    border: 'border-green-400 dark:border-green-500',
-    text: 'text-green-800 dark:text-green-200',
-    iconColor: 'text-green-500',
+    bg: 'bg-success-100 dark:bg-success-900/70',
+    border: 'border-success-400 dark:border-success-500',
+    text: 'text-success-800 dark:text-success-200',
+    iconColor: 'text-success-500',
   },
   error: {
     Icon: ErrorIcon,
-    bg: 'bg-red-100 dark:bg-red-900/70',
-    border: 'border-red-400 dark:border-red-500',
-    text: 'text-red-800 dark:text-red-200',
-    iconColor: 'text-red-500',
+    bg: 'bg-danger-100 dark:bg-danger-900/70',
+    border: 'border-danger-400 dark:border-danger-500',
+    text: 'text-danger-800 dark:text-danger-200',
+    iconColor: 'text-danger-500',
   },
   info: {
     Icon: InfoIcon,
-    bg: 'bg-blue-100 dark:bg-blue-900/70',
-    border: 'border-blue-400 dark:border-blue-500',
-    text: 'text-blue-800 dark:text-blue-200',
-    iconColor: 'text-blue-500',
+    bg: 'bg-info-100 dark:bg-info-900/70',
+    border: 'border-info-400 dark:border-info-500',
+    text: 'text-info-800 dark:text-info-200',
+    iconColor: 'text-info-500',
   },
 };
 
@@ -56,7 +56,7 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       <div className="p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0">
-            <config.Icon className={`h-6 w-6 ${config.iconColor}`} aria-hidden="true" />
+            <config.Icon className={`text-2xl ${config.iconColor}`} aria-hidden="true" />
           </div>
           <div className="ml-3 w-0 flex-1 pt-0.5">
             <p className={`text-sm font-medium ${config.text}`}>{message}</p>
@@ -64,10 +64,10 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
           <div className="ml-4 flex-shrink-0 flex">
             <button
               onClick={() => onClose(id)}
-              className="inline-flex rounded-md bg-transparent text-slate-500 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:focus:ring-offset-slate-800"
+              className="inline-flex rounded-md bg-transparent text-neutral-500 hover:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-neutral-800"
             >
               <span className="sr-only">Close</span>
-              <CloseIcon className="h-5 w-5" aria-hidden="true" />
+              <CloseIcon className="text-xl" aria-hidden="true" />
             </button>
           </div>
         </div>

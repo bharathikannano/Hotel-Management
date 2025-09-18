@@ -65,7 +65,7 @@ const HousekeepingPage: React.FC<HousekeepingPageProps> = ({ tasks, rooms, users
     return (
         <div className="space-y-6">
              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-300">Housekeeping Schedule</h2>
+                <h2 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">Housekeeping Schedule</h2>
                 <Button onClick={() => onOpenModal(null)}>New Task</Button>
             </div>
             <Table
@@ -73,10 +73,10 @@ const HousekeepingPage: React.FC<HousekeepingPageProps> = ({ tasks, rooms, users
                 data={tasks}
                 renderRowActions={(task) => (
                     <div className="flex space-x-2">
-                        <button onClick={() => handleOpenDetailsModal(task)} className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200" title="View Details"><InfoIcon className="w-5 h-5"/></button>
-                        <button onClick={() => onOpenModal(task)} className="text-brand-600 hover:text-brand-800" title="Edit"><EditIcon className="w-5 h-5"/></button>
+                        <button onClick={() => handleOpenDetailsModal(task)} className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200" title="View Details"><InfoIcon className="text-xl"/></button>
+                        <button onClick={() => onOpenModal(task)} className="text-primary-600 hover:text-primary-800" title="Edit"><EditIcon className="text-xl"/></button>
                         {currentUser.role === Role.Admin && (
-                            <button onClick={() => handleDelete(task.id)} className="text-red-600 hover:red-800" title="Delete"><DeleteIcon className="w-5 h-5"/></button>
+                            <button onClick={() => handleDelete(task.id)} className="text-danger-600 hover:danger-800" title="Delete"><DeleteIcon className="text-xl"/></button>
                         )}
                     </div>
                 )}

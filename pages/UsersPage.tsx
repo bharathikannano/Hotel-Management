@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import Table, { Column } from '../components/common/Table';
 import Select from '../components/common/Select';
@@ -69,28 +70,28 @@ const UserForm = ({ onSave, onCancel }: { onSave: (data: Omit<User, 'id' | 'avat
             </Select>
 
             <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Avatar (Optional)</label>
+                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Avatar (Optional)</label>
                 <div className="flex items-center gap-4">
-                     <div className="flex p-1 bg-slate-200 dark:bg-slate-700 rounded-lg">
-                        <button type="button" onClick={() => switchAvatarInputType('url')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'url' ? 'bg-white dark:bg-slate-600 text-brand-700 dark:text-brand-300 shadow' : 'text-slate-600 dark:text-slate-300'}`}>URL</button>
-                        <button type="button" onClick={() => switchAvatarInputType('upload')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'upload' ? 'bg-white dark:bg-slate-600 text-brand-700 dark:text-brand-300 shadow' : 'text-slate-600 dark:text-slate-300'}`}>Upload</button>
+                     <div className="flex p-1 bg-neutral-200 dark:bg-neutral-700 rounded-lg">
+                        <button type="button" onClick={() => switchAvatarInputType('url')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'url' ? 'bg-white dark:bg-neutral-600 text-primary-700 dark:text-primary-300 shadow' : 'text-neutral-600 dark:text-neutral-300'}`}>URL</button>
+                        <button type="button" onClick={() => switchAvatarInputType('upload')} className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${avatarInputType === 'upload' ? 'bg-white dark:bg-neutral-600 text-primary-700 dark:text-primary-300 shadow' : 'text-neutral-600 dark:text-neutral-300'}`}>Upload</button>
                     </div>
-                    {avatarPreview && <img src={avatarPreview} alt="Avatar Preview" className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"/>}
+                    {avatarPreview && <img src={avatarPreview} alt="Avatar Preview" className="w-12 h-12 rounded-full object-cover border-2 border-neutral-200 dark:border-neutral-600"/>}
                 </div>
                 {avatarInputType === 'url' ? (
                     <Input label="" name="avatarUrl" id="avatarUrl" value={formData.avatarUrl} onChange={handleChange} placeholder="https://example.com/avatar.png" />
                 ) : (
                     <div>
-                        <label htmlFor="avatarUpload" className="inline-block cursor-pointer bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-500 rounded-md shadow-sm px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-brand-500">
+                        <label htmlFor="avatarUpload" className="inline-block cursor-pointer bg-white dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-600 rounded-xl shadow-sm px-4 py-2 text-sm font-medium hover:border-primary-400 dark:hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 focus:ring-primary-500/50 transition-colors">
                            {avatarPreview ? 'Change File' : 'Choose File'}
                         </label>
                         <input id="avatarUpload" name="avatarUpload" type="file" className="sr-only" onChange={handleAvatarFileChange} accept="image/png, image/jpeg, image/gif"/>
-                        {avatarPreview && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">File selected.</p>}
+                        {avatarPreview && <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">File selected.</p>}
                     </div>
                 )}
             </div>
 
-            <div className="flex justify-end space-x-2 pt-4 border-t dark:border-slate-700 mt-4">
+            <div className="flex justify-end space-x-2 pt-4 border-t dark:border-neutral-700 mt-4">
                 <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
                 <Button type="submit">Create User</Button>
             </div>
@@ -132,8 +133,8 @@ const UsersPage: React.FC = () => {
                 <div className="flex items-center">
                     <img className="h-10 w-10 rounded-full object-cover" src={item.avatarUrl} alt={`${item.name}'s avatar`} />
                     <div className="ml-4">
-                        <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{item.name}</div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">{item.username}</div>
+                        <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{item.name}</div>
+                        <div className="text-sm text-neutral-500 dark:text-neutral-400">{item.username}</div>
                     </div>
                 </div>
             )
@@ -144,7 +145,7 @@ const UsersPage: React.FC = () => {
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end space-y-4 sm:space-y-0">
-                <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-300">User Management</h2>
+                <h2 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">User Management</h2>
                 <div className="flex items-end space-x-4">
                     <div className="w-full sm:w-48">
                         <Select

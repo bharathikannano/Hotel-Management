@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
@@ -10,11 +12,17 @@ import ReportsPage from './pages/ReportsPage';
 import UsersPage from './pages/UsersPage';
 import LoginPage from './pages/LoginPage';
 import GuestProfilePage from './pages/GuestProfilePage';
+import FeedbackPage from './pages/FeedbackPage';
+import SubmitFeedbackPage from './pages/SubmitFeedbackPage';
+import ActivityLogPage from './pages/ActivityLogPage';
 import ReservationModal from './components/reservations/ReservationModal';
 import TaskModal from './components/housekeeping/TaskModal';
 import ToastContainer from './components/common/ToastContainer';
-import { Page, User, Reservation, Guest, Room, HousekeepingTask, ReservationModalData, RoomType, ReservationStatus, RoomStatus, Guest as GuestType, ToastMessage, Theme, HousekeepingTaskModalData, TaskStatus } from './types';
-import { mockUsers, mockReservations, mockGuests, mockRooms, mockHousekeepingTasks, mockRoomTypes } from './data';
+import ConfirmationModal from './components/common/ConfirmationModal';
+import GlobalSearchModal from './components/search/GlobalSearchModal';
+// FIX: Added 'Role' to the import list to resolve 'Cannot find name' error and removed duplicate 'RoomStatus'.
+import { Page, User, Reservation, Guest, Room, HousekeepingTask, ReservationModalData, RoomType, ReservationStatus, RoomStatus, Role, Guest as GuestType, ToastMessage, Theme, HousekeepingTaskModalData, TaskStatus, Feedback, ActivityLog } from './types';
+import { mockUsers, mockReservations, mockGuests, mockRooms, mockHousekeepingTasks, mockRoomTypes, mockActivityLog } from './data';
 
 function App() {
   // --- STATE MANAGEMENT ---
@@ -24,7 +32,9 @@ function App() {
   const [guests, setGuests] = useState<Guest[]>(mockGuests);
   const [rooms, setRooms] = useState<Room[]>(mockRooms);
   const [tasks, setTasks] = useState<HousekeepingTask[]>(mockHousekeepingTasks);
-  const [roomTypes] = useState<RoomType[]>(mockRoomTypes);
+  const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [activityLog, setActivityLog] = useState<ActivityLog[]>(mockActivityLog);
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>(mockRoomTypes);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   
   // Profile page state
@@ -35,6 +45,9 @@ function App() {
   const [reservationModalData, setReservationModalData] = useState<ReservationModalData>(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<HousekeepingTaskModalData>(null);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
 
   // UI State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -46,13 +59,32 @@ function App() {
   // --- THEME HANDLING ---
   useEffect(() => {
     const root = window.document.documentElement;
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.toggle('dark', systemTheme === 'dark');
-    } else {
-      root.classList.toggle('dark', theme === 'dark');
-    }
+
+    const applyTheme = (t: Theme) => {
+        if (t === 'system') {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            root.classList.toggle('dark', systemTheme === 'dark');
+        } else {
+            root.classList.toggle('dark', t === 'dark');
+        }
+    };
+
+    applyTheme(theme);
     localStorage.setItem('theme', theme);
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleSystemThemeChange = () => {
+        if (theme === 'system') {
+            applyTheme('system');
+        }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+
+    return () => {
+        mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    };
   }, [theme]);
 
   const handleThemeChange = (newTheme: Theme) => {
@@ -62,12 +94,21 @@ function App() {
   // --- AUTHENTICATION ---
   const handleLogin = (user: User) => {
     setCurrentUser(user);
-    setCurrentPage('Dashboard');
+    if (user.role === Role.Guest) {
+      setCurrentPage('SubmitFeedback');
+    } else {
+      setCurrentPage('Dashboard');
+    }
   };
 
   const handleLogout = () => {
-    setCurrentUser(null);
+    setIsLogoutConfirmOpen(true);
   };
+  
+  const handleConfirmLogout = () => {
+    setCurrentUser(null);
+    setIsLogoutConfirmOpen(false);
+  }
   
   // --- TOAST NOTIFICATIONS ---
   const addToast = (message: string, type: ToastMessage['type'] = 'success') => {
@@ -80,9 +121,13 @@ function App() {
   };
 
   // --- NAVIGATION ---
-  const handleNavigate = (page: Page) => {
-    setCurrentPage(page);
-    setViewingGuest(null); // Reset guest profile view on navigation
+  const handleNavigate = (page: Page, data?: any) => {
+    if (page === 'GuestProfile' && data) {
+      handleViewGuestProfile(data as GuestType);
+    } else {
+      setCurrentPage(page);
+      setViewingGuest(null); // Reset guest profile view on navigation
+    }
     if (window.innerWidth < 768) { // Close sidebar on mobile after navigation
       setIsSidebarOpen(false);
     }
@@ -160,6 +205,11 @@ function App() {
     setGuests(prev => prev.map(g => g.id === id ? { ...g, ...guestData } : g));
     addToast('Guest updated successfully!');
   };
+  
+  const handleSaveGuestNotes = (guestId: string, notes: string) => {
+    setGuests(prev => prev.map(g => g.id === guestId ? {...g, notes} : g));
+    addToast('Guest notes saved.');
+  }
 
   const handleDeleteGuest = (id: string) => {
     setGuests(prev => prev.filter(g => g.id !== id));
@@ -209,12 +259,27 @@ function App() {
     addToast(`Room ${room?.roomNumber} status updated to ${status}.`, 'info');
   };
 
+  const handleSaveRoomType = (roomTypeId: string, updatedData: Partial<Omit<RoomType, 'id'>>) => {
+    setRoomTypes(prev => prev.map(rt => rt.id === roomTypeId ? { ...rt, ...updatedData } : rt));
+    addToast('Room type details updated successfully!');
+  };
+
+  const handleFeedbackSubmit = (data: Omit<Feedback, 'id' | 'dateSubmitted'>) => {
+    const newFeedback: Feedback = {
+      ...data,
+      id: `fb-${Date.now()}`,
+      dateSubmitted: new Date().toISOString().split('T')[0],
+    };
+    setFeedback(prev => [newFeedback, ...prev]);
+    addToast('Thank you for your feedback!');
+  };
+
   // --- PAGE RENDERING ---
   const renderPage = () => {
     if (!currentUser) return null; // Should not happen due to the login check below
     switch (currentPage) {
       case 'Dashboard':
-        return <DashboardPage reservations={reservations} rooms={rooms} guests={guests} tasks={tasks} />;
+        return <DashboardPage reservations={reservations} rooms={rooms} guests={guests} tasks={tasks} activityLog={activityLog} onNavigate={handleNavigate} />;
       case 'Reservations':
         return <ReservationsPage 
             reservations={reservations} 
@@ -238,7 +303,9 @@ function App() {
           reservations={reservations} 
           guests={guests} 
           onOpenModal={handleOpenReservationModal} 
+          tasks={tasks}
           onUpdateRoomStatus={handleUpdateRoomStatus}
+          onSaveRoomType={handleSaveRoomType}
         />;
       case 'Housekeeping':
         return <HousekeepingPage 
@@ -253,15 +320,22 @@ function App() {
         return <ReportsPage />;
       case 'Users':
         return <UsersPage />;
+      case 'Feedback':
+        return <FeedbackPage feedback={feedback} />;
+      case 'ActivityLog':
+        return <ActivityLogPage activityLog={activityLog} />;
+      case 'SubmitFeedback':
+        return <SubmitFeedbackPage onSubmit={handleFeedbackSubmit} />;
       case 'GuestProfile':
         if (viewingGuest) {
           const guestReservations = reservations.filter(r => r.guestId === viewingGuest.id);
           const roomsMap = new Map(rooms.map(r => [r.id, r]));
-          return <GuestProfilePage guest={viewingGuest} reservations={guestReservations} roomsMap={roomsMap} onNavigate={handleNavigate} />;
+          const roomTypesMap = new Map(roomTypes.map(rt => [rt.id, rt]));
+          return <GuestProfilePage guest={viewingGuest} reservations={guestReservations} roomsMap={roomsMap} roomTypesMap={roomTypesMap} onNavigate={handleNavigate} onSaveNotes={handleSaveGuestNotes} />;
         }
         return null; // or a fallback
       default:
-        return <DashboardPage reservations={reservations} rooms={rooms} guests={guests} tasks={tasks} />;
+        return <DashboardPage reservations={reservations} rooms={rooms} guests={guests} tasks={tasks} activityLog={activityLog} onNavigate={handleNavigate} />;
     }
   };
   
@@ -270,7 +344,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+    <div className="flex h-screen bg-neutral-100 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
       <Sidebar 
         currentPage={currentPage} 
         user={currentUser} 
@@ -283,10 +357,14 @@ function App() {
           currentPage={currentPage} 
           user={currentUser} 
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          onOpenSearch={() => setIsSearchModalOpen(true)}
           theme={theme}
           onThemeChange={handleThemeChange}
         />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <main
+          key={currentPage + (viewingGuest?.id || '')}
+          className="flex-1 overflow-x-hidden overflow-y-auto p-6 animate-page-enter"
+        >
           {renderPage()}
         </main>
       </div>
@@ -305,6 +383,23 @@ function App() {
         initialData={editingTask}
         rooms={rooms}
         users={mockUsers}
+      />
+      <ConfirmationModal
+        isOpen={isLogoutConfirmOpen}
+        onClose={() => setIsLogoutConfirmOpen(false)}
+        onConfirm={handleConfirmLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to log out?"
+        confirmButtonText="Logout"
+        confirmButtonVariant="danger"
+      />
+      <GlobalSearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        guests={guests}
+        reservations={reservations}
+        rooms={rooms}
+        onNavigate={handleNavigate}
       />
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>

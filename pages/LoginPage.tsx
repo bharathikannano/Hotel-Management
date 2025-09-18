@@ -25,13 +25,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, users }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-slate-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark">
+    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
+      <div className="w-full max-w-md p-8 space-y-8 bg-neutral-50 dark:bg-neutral-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark">
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white">
+          <h2 className="text-center text-3xl font-extrabold text-neutral-900 dark:text-white">
             Zenith Grand Hotel
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+          <p className="mt-2 text-center text-sm text-neutral-600 dark:text-neutral-400">
             Sign in to your account
           </p>
         </div>
@@ -63,14 +63,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, users }) => {
               />
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-danger-500 text-sm">{error}</p>}
           <div>
             <Button type="submit" className="w-full">
               Sign in
             </Button>
           </div>
         </form>
-        <div className="text-xs text-center text-slate-500 dark:text-slate-400">
+        <div className="text-xs text-center text-neutral-500 dark:text-neutral-400">
             <p className="font-bold">Demo Logins:</p>
             <p>Username: admin</p>
             <p>Username: manager</p>

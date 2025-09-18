@@ -1,8 +1,7 @@
-
 import {
   Hotel, RoomType, Room, Guest, Reservation, Payment, HousekeepingTask,
   OccupancyReport, RevenueReport, User, Role, RoomTypeEnum, RoomStatus,
-  ReservationStatus, TaskStatus, TaskPriority
+  ReservationStatus, TaskStatus, TaskPriority, ActivityLog
 } from '../types';
 
 // USERS
@@ -21,11 +20,11 @@ export const mockHotels: Hotel[] = [
 
 // ROOMS
 export const mockRoomTypes: RoomType[] = [
-  { id: 'rt-1', name: RoomTypeEnum.Single, basePrice: 150, amenities: ['Wifi', 'TV', 'AC'] },
-  { id: 'rt-2', name: RoomTypeEnum.Double, basePrice: 220, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar'] },
-  { id: 'rt-3', name: RoomTypeEnum.Suite, basePrice: 400, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar', 'Jacuzzi'] },
-  { id: 'rt-4', name: RoomTypeEnum.Deluxe, basePrice: 320, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar', 'Balcony'] },
-  { id: 'rt-5', name: RoomTypeEnum.Family, basePrice: 350, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar', '2 Bedrooms'] },
+  { id: 'rt-1', name: RoomTypeEnum.Single, basePrice: 150, capacity: 2, amenities: ['Wifi', 'TV', 'AC'] },
+  { id: 'rt-2', name: RoomTypeEnum.Double, basePrice: 220, capacity: 2, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar'] },
+  { id: 'rt-3', name: RoomTypeEnum.Suite, basePrice: 400, capacity: 4, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar', 'Jacuzzi'] },
+  { id: 'rt-4', name: RoomTypeEnum.Deluxe, basePrice: 320, capacity: 2, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar', 'Balcony'] },
+  { id: 'rt-5', name: RoomTypeEnum.Family, basePrice: 350, capacity: 5, amenities: ['Wifi', 'TV', 'AC', 'Mini-bar', '2 Bedrooms'] },
 ];
 
 export const mockRooms: Room[] = [
@@ -45,9 +44,9 @@ mockRooms[21].status = RoomStatus.Occupied;
 
 // GUESTS
 export const mockGuests: Guest[] = [
-  { id: 'guest-1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phone: '555-1234', address: '1 Main St, Anytown' },
+  { id: 'guest-1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phone: '555-1234', address: '1 Main St, Anytown', notes: 'Prefers a room on a high floor, away from the elevator. Allergic to peanuts.' },
   { id: 'guest-2', firstName: 'Jane', lastName: 'Smith', email: 'jane.smith@example.com', phone: '555-5678', address: '2 Market St, Anytown' },
-  { id: 'guest-3', firstName: 'Bob', lastName: 'Johnson', email: 'bob.j@example.com', phone: '555-8765', address: '3 Oak Ave, Anytown' },
+  { id: 'guest-3', firstName: 'Bob', lastName: 'Johnson', email: 'bob.j@example.com', phone: '555-8765', address: '3 Oak Ave, Anytown', notes: 'VIP Guest. Requested a bottle of champagne on arrival for his next visit.' },
 ];
 
 // RESERVATIONS
@@ -94,4 +93,24 @@ export const mockRevenue: RevenueReport[] = [
   { month: 'May', revenue: 95000, adr: 270 },
   { month: 'June', revenue: 110000, adr: 285 },
   { month: 'July', revenue: 125000, adr: 300 },
+];
+
+// ACTIVITY LOG
+const now = new Date();
+const today = (d: Date) => d.toISOString().split('T')[0];
+const yesterday = (d: Date) => new Date(d.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+export const mockActivityLog: ActivityLog[] = [
+  // Today's activities
+  { id: 'act-1', timestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), type: 'Check-In', description: 'John Doe checked into Room 202.', link: { page: 'GuestProfile', guestId: 'guest-1' } },
+  { id: 'act-2', timestamp: new Date(now.getTime() - 5 * 60 * 60 * 1000).toISOString(), type: 'New Reservation', description: 'Reservation created for Jane Smith in Room 301.', link: { page: 'GuestProfile', guestId: 'guest-2' } },
+  { id: 'act-3', timestamp: new Date(now.getTime() - 8 * 60 * 60 * 1000).toISOString(), type: 'New Guest', description: 'New guest profile created for Bob Johnson.', link: { page: 'GuestProfile', guestId: 'guest-3' } },
+  
+  // Yesterday's activities
+  { id: 'act-4', timestamp: `${yesterday(now)}T18:30:00.000Z`, type: 'Check-Out', description: 'Previous guest checked out from Room 104.'},
+  { id: 'act-5', timestamp: `${yesterday(now)}T15:00:00.000Z`, type: 'Check-In', description: 'A guest checked into Room 501.'},
+  { id: 'act-6', timestamp: `${yesterday(now)}T11:00:00.000Z`, type: 'New Reservation', description: 'Future reservation created for Room 402.'},
+
+  // Two days ago
+  { id: 'act-7', timestamp: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(), type: 'Check-Out', description: 'Bob Johnson checked out from Room 103.', link: { page: 'GuestProfile', guestId: 'guest-3' } },
 ];

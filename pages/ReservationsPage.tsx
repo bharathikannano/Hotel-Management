@@ -25,67 +25,44 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
     const [filter, setFilter] = useState('');
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
     const [reservationToDelete, setReservationToDelete] = useState<string | null>(null);
-
+    
     const guestsMap = useMemo(() => new Map(mockGuests.map(g => [g.id, g])), []);
     const roomsMap = useMemo(() => new Map(rooms.map(r => [r.id, r])), [rooms]);
 
-    const filteredReservations = useMemo(() => 
-        reservations.filter(res => {
-            const guest = guestsMap.get(res.guestId);
+    const filteredReservations = useMemo(() =>
+        reservations.filter(r => {
+            const guest = guestsMap.get(r.guestId);
             const guestName = guest ? `${guest.firstName} ${guest.lastName}` : '';
-            const room = roomsMap.get(res.roomId);
-            const roomNumber = room ? room.roomNumber : '';
-            const searchTerm = filter.toLowerCase();
+            return guestName.toLowerCase().includes(filter.toLowerCase()) || r.id.toLowerCase().includes(filter.toLowerCase());
+        }), [reservations, filter, guestsMap]
+    );
 
-            return res.id.toLowerCase().includes(searchTerm) ||
-                   guestName.toLowerCase().includes(searchTerm) ||
-                   roomNumber.toLowerCase().includes(searchTerm) ||
-                   res.status.toLowerCase().includes(searchTerm);
-        }), [reservations, filter, guestsMap, roomsMap]);
+    const handleCheckout = (reservation: Reservation) => {
+        setCheckingOutReservation(reservation);
+        setIsPaymentModalOpen(true);
+    };
 
-    const columns: Column<Reservation>[] = [
-        { header: 'ID', accessor: 'id', sortable: true },
-        { 
-            header: 'Guest', 
-            accessor: (item) => {
-                const guest = guestsMap.get(item.guestId);
-                return guest ? `${guest.firstName} ${guest.lastName}` : 'N/A';
-            }, 
-            sortable: true 
-        },
-        { 
-            header: 'Room', 
-            accessor: (item) => roomsMap.get(item.roomId)?.roomNumber || 'N/A', 
-            sortable: true 
-        },
-        { header: 'Check-in', accessor: (item) => `${item.checkInDate}${item.checkInTime ? ` @ ${item.checkInTime}` : ''}`, sortable: true },
-        { header: 'Check-out', accessor: (item) => `${item.checkOutDate}${item.checkOutTime ? ` @ ${item.checkOutTime}` : ''}`, sortable: true },
-        { 
-            header: 'Expected Arrival/Departure', 
-            accessor: (item) => {
-                if (item.status === ReservationStatus.Confirmed && item.expectedCheckInTime) {
-                    return `Exp. In: ${item.expectedCheckInTime}`;
-                }
-                if (item.status === ReservationStatus.CheckedIn && item.expectedCheckOutTime) {
-                    return `Exp. Out: ${item.expectedCheckOutTime}`;
-                }
-                return 'N/A';
-            }, 
-            sortable: false
-        },
-        { header: 'Status', accessor: (item) => <ReservationStatusBadge status={item.status} />, sortable: true },
-        { header: 'Total', accessor: (item) => `$${item.totalAmount.toFixed(2)}`, sortable: true },
-    ];
+    const handleConfirmCheckout = (paymentMethod: Payment['method']) => {
+        if (checkingOutReservation) {
+            // In a real app, this would involve more logic like updating room status etc.
+            // which is handled in App.tsx handleSaveReservation
+            const updatedReservation = { ...checkingOutReservation, status: ReservationStatus.CheckedOut };
+            // Simulate saving the reservation update by passing the full object to onOpenModal
+            onOpenModal(updatedReservation); 
+        }
+        handleClosePaymentModal();
+    };
 
-    const handleOpenModal = (reservation: Reservation | null = null) => {
-        onOpenModal(reservation);
+    const handleClosePaymentModal = () => {
+        setIsPaymentModalOpen(false);
+        setCheckingOutReservation(null);
     };
     
     const handleDelete = (id: string) => {
         setReservationToDelete(id);
         setIsDeleteConfirmOpen(true);
     };
-
+    
     const handleConfirmDelete = () => {
         if (reservationToDelete) {
             onDeleteReservation(reservationToDelete);
@@ -97,45 +74,25 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
         setIsDeleteConfirmOpen(false);
         setReservationToDelete(null);
     };
-
-    const handleOpenPaymentModal = (reservation: Reservation) => {
-        setCheckingOutReservation(reservation);
-        setIsPaymentModalOpen(true);
-    };
-
-    const handleClosePaymentModal = () => {
-        setIsPaymentModalOpen(false);
-        setCheckingOutReservation(null);
-    };
-
-    const handleConfirmCheckout = (paymentMethod: Payment['method']) => {
-        if (!checkingOutReservation) return;
-
-        // This should also be lifted up if we want full consistency
-        // For now, it updates a local state which will be out of sync.
-        // A full solution would lift the checkout logic to App.tsx as well.
-
-        setRooms(prev => prev.map(room => room.id === checkingOutReservation.roomId ? { ...room, status: RoomStatus.Dirty } : room));
-
-        const newPayment: Payment = {
-            id: `pay-${Date.now()}`,
-            reservationId: checkingOutReservation.id,
-            amount: checkingOutReservation.totalAmount,
-            paymentDate: new Date().toISOString().split('T')[0],
-            method: paymentMethod,
-        };
-        setPayments(prev => [...prev, newPayment]);
-
-        handleClosePaymentModal();
-    };
+    
+    const columns: Column<Reservation>[] = [
+        { header: 'Guest', accessor: (item) => {
+            const guest = guestsMap.get(item.guestId);
+            return guest ? `${guest.firstName} ${guest.lastName}` : 'N/A';
+        }, sortable: true },
+        { header: 'Room', accessor: (item) => roomsMap.get(item.roomId)?.roomNumber || 'N/A', sortable: true },
+        { header: 'Check-in', accessor: 'checkInDate', sortable: true },
+        { header: 'Check-out', accessor: 'checkOutDate', sortable: true },
+        { header: 'Status', accessor: (item) => <ReservationStatusBadge status={item.status} />, sortable: true, sortKey: 'status' },
+    ];
     
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <div className="w-full md:w-1/3">
-                    <Input label="" id="search" type="text" placeholder="Search by ID, guest, room, or status..." value={filter} onChange={e => setFilter(e.target.value)} />
+                    <Input label="" id="search" type="text" placeholder="Search by guest name or reservation ID..." value={filter} onChange={e => setFilter(e.target.value)} />
                 </div>
-                <Button onClick={() => handleOpenModal()} className="w-full md:w-auto">New Reservation</Button>
+                <Button onClick={() => onOpenModal(null)} className="w-full md:w-auto">New Reservation</Button>
             </div>
             <Table
                 columns={columns}
@@ -143,13 +100,17 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
                 renderRowActions={(reservation) => (
                     <div className="flex space-x-2">
                         {reservation.status === ReservationStatus.CheckedIn && (
-                            <button onClick={() => handleOpenPaymentModal(reservation)} className="text-green-600 hover:text-green-800" title="Check-out">
-                                <CheckOutIcon className="w-5 h-5"/>
+                            <button onClick={() => handleCheckout(reservation)} className="text-success-600 hover:text-success-800" title="Check-out & Pay">
+                                <CheckOutIcon className="text-xl" /> 
                             </button>
                         )}
-                        <button onClick={() => handleOpenModal(reservation)} className="text-brand-600 hover:text-brand-800" title="Edit"><EditIcon className="w-5 h-5"/></button>
+                        <button onClick={() => onOpenModal(reservation)} className="text-primary-600 hover:text-primary-800" title="Edit">
+                            <EditIcon className="text-xl" />
+                        </button>
                         {currentUser.role === Role.Admin && (
-                           <button onClick={() => handleDelete(reservation.id)} className="text-red-600 hover:red-800" title="Delete"><DeleteIcon className="w-5 h-5"/></button>
+                             <button onClick={() => handleDelete(reservation.id)} className="text-danger-600 hover:danger-800" title="Delete">
+                                <DeleteIcon className="text-xl" />
+                            </button>
                         )}
                     </div>
                 )}

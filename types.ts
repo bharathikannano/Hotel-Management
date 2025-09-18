@@ -1,5 +1,5 @@
 // FIX: Added Page type to be shared across components.
-export type Page = 'Dashboard' | 'Reservations' | 'Guests' | 'Rooms' | 'Housekeeping' | 'Reports' | 'Users' | 'GuestProfile';
+export type Page = 'Dashboard' | 'Reservations' | 'Guests' | 'Rooms' | 'Housekeeping' | 'Reports' | 'Users' | 'GuestProfile' | 'Feedback' | 'SubmitFeedback' | 'ActivityLog';
 export type Theme = 'light' | 'dark' | 'system';
 
 export enum Role {
@@ -38,6 +38,7 @@ export interface RoomType {
   id: string;
   name: RoomTypeEnum;
   basePrice: number;
+  capacity: number;
   amenities: string[];
 }
 
@@ -62,6 +63,7 @@ export interface Guest {
   email: string;
   phone: string;
   address: string;
+  notes?: string;
 }
 
 export enum ReservationStatus {
@@ -144,4 +146,32 @@ export interface ToastMessage {
   id: string;
   message: string;
   type: 'success' | 'error' | 'info';
+}
+
+export interface Feedback {
+  id: string;
+  guestName: string;
+  roomNumber: string;
+  rating: number;
+  comments: string;
+  suggestions?: string;
+  dateSubmitted: string;
+}
+
+export type ActivityLogType = 'Check-In' | 'Check-Out' | 'New Reservation' | 'New Guest';
+
+export interface ActivityLog {
+  id: string;
+  timestamp: string; // ISO string
+  type: ActivityLogType;
+  description: string;
+  link?: { page: Page; guestId?: string; };
+}
+
+export type GlobalSearchResult = {
+    type: 'Guest' | 'Reservation' | 'Room';
+    id: string;
+    title: string;
+    description: string;
+    data: Guest | Reservation | Room;
 }

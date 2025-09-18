@@ -59,15 +59,15 @@ const Table = <T extends { id: string }>(
   }, [data, sortColumn, sortDirection, columns]);
 
   return (
-    <div className="overflow-x-auto bg-white dark:bg-slate-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark">
-      <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-        <thead className="bg-slate-50 dark:bg-slate-700/50">
+    <div className="overflow-x-auto bg-neutral-50 dark:bg-neutral-800 rounded-2xl shadow-xl shadow-primary-900/10 dark:shadow-xl dark:shadow-black/30">
+      <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+        <thead className="bg-neutral-100 dark:bg-neutral-700/50">
           <tr>
             {columns.map((col) => (
               <th
                 key={String(col.header)}
                 scope="col"
-                className={`px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider ${col.sortable ? 'cursor-pointer' : ''}`}
+                className={`px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider ${col.sortable ? 'cursor-pointer' : ''}`}
                 onClick={() => col.sortable && handleSort(col)}
               >
                 <div className="flex items-center">
@@ -87,11 +87,11 @@ const Table = <T extends { id: string }>(
             )}
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+        <tbody className="bg-neutral-50 dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
           {sortedData.map((item) => (
-            <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+            <tr key={item.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-700/50">
               {columns.map((col) => (
-                <td key={`${item.id}-${String(col.header)}`} className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
+                <td key={`${item.id}-${String(col.header)}`} className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600 dark:text-neutral-300">
                   {typeof col.accessor === 'function'
                     ? col.accessor(item)
                     : (item[col.accessor] as React.ReactNode)}

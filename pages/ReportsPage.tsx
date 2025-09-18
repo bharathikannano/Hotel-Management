@@ -5,6 +5,9 @@ import Table, { Column } from '../components/common/Table';
 import Button from '../components/common/Button';
 import { OccupancyReport, RevenueReport } from '../types';
 import { mockOccupancy, mockRevenue } from '../data';
+import OccupancyChart from '../components/reports/OccupancyChart';
+import RevenueChart from '../components/reports/RevenueChart';
+import Card from '../components/common/Card';
 
 const ReportsPage: React.FC = () => {
   const occupancyColumns: Column<OccupancyReport & { id: string }>[] = [
@@ -36,21 +39,27 @@ const ReportsPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <div>
+       <Card title="Occupancy Report">
+        <div className="mb-6">
+          <OccupancyChart data={mockOccupancy} />
+        </div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-300">Occupancy Report</h2>
+          <h3 className="text-lg font-semibold text-neutral-700 dark:text-neutral-300">Detailed Data</h3>
           <Button variant="secondary" onClick={() => handleDownloadCSV(mockOccupancy, 'occupancy_report')}>Download CSV</Button>
         </div>
         <Table columns={occupancyColumns} data={mockOccupancy.map(o => ({ ...o, id: o.date }))} />
-      </div>
+      </Card>
 
-      <div>
+      <Card title="Revenue Report">
+        <div className="mb-6">
+            <RevenueChart data={mockRevenue} />
+        </div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-300">Revenue Report</h2>
+          <h3 className="text-lg font-semibold text-neutral-700 dark:text-neutral-300">Detailed Data</h3>
            <Button variant="secondary" onClick={() => handleDownloadCSV(mockRevenue, 'revenue_report')}>Download CSV</Button>
         </div>
         <Table columns={revenueColumns} data={mockRevenue.map(r => ({ ...r, id: r.month }))} />
-      </div>
+      </Card>
     </div>
   );
 };
