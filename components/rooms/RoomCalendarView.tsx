@@ -1,29 +1,12 @@
-
-
 import React, { useState, useMemo } from 'react';
-import { Room, Reservation, RoomStatus, Guest, RoomType, ReservationStatus, ReservationModalData, HousekeepingTask, TaskStatus } from '../../types';
+import { RoomStatus, ReservationStatus, TaskStatus } from '../../types';
 import { ReservationIcon, HousekeepingIcon } from '../icons';
 
-interface RoomCalendarViewProps {
-  rooms: Room[];
-  reservations: Reservation[];
-  tasks: HousekeepingTask[];
-  guestsMap: Map<string, Guest>;
-  roomTypesMap: Map<string, RoomType>;
-  onCellClick: (data: ReservationModalData) => void;
-}
-
-interface CalendarCell {
-  status: RoomStatus | 'Occupied-Confirmed' | 'Occupied-CheckedIn';
-  reservation?: Reservation;
-}
-
-const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations, tasks, guestsMap, roomTypesMap, onCellClick }) => {
+const RoomCalendarView = ({ rooms, reservations, tasks, guestsMap, roomTypesMap, onCellClick }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  // FIX: Changed type from JSX.Element to React.ReactNode to resolve 'Cannot find namespace' error.
-  const [tooltip, setTooltip] = useState<{ room: number; day: number; content: React.ReactNode } | null>(null);
+  const [tooltip, setTooltip] = useState(null);
 
-  const statusIndicatorColor: Record<RoomStatus, string> = {
+  const statusIndicatorColor = {
     [RoomStatus.Available]: 'bg-success-500',
     [RoomStatus.Occupied]: 'bg-accent-500',
     [RoomStatus.Dirty]: 'bg-danger-500',
@@ -34,13 +17,13 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const roomsMap = new Map<string, { hasUpcomingReservation: boolean; hasPendingTask: boolean }>();
+    const roomsMap = new Map();
 
-    const getRoomActions = (roomId: string) => {
+    const getRoomActions = (roomId) => {
         if (!roomsMap.has(roomId)) {
             roomsMap.set(roomId, { hasUpcomingReservation: false, hasPendingTask: false });
         }
-        return roomsMap.get(roomId)!;
+        return roomsMap.get(roomId);
     };
 
     reservations.forEach(res => {
@@ -67,7 +50,7 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
     const dates = Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
 
     return rooms.map(room => {
-      const dailyStatuses: CalendarCell[] = dates.map(day => {
+      const dailyStatuses = dates.map(day => {
         const dayString = day.toISOString().split('T')[0];
         
         const reservation = reservations.find(res => 
@@ -100,9 +83,8 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
   
-  const statusColors: { [key in CalendarCell['status']]: string } = {
+  const statusColors = {
       [RoomStatus.Available]: 'bg-success-100 hover:bg-success-200 dark:bg-success-900/40 dark:hover:bg-success-900/60 cursor-pointer',
-      // FIX: Added missing RoomStatus.Occupied property to handle all possible room statuses.
       [RoomStatus.Occupied]: 'bg-accent-200 hover:bg-accent-300 dark:bg-accent-900/40 dark:hover:bg-accent-900/60',
       'Occupied-Confirmed': 'bg-info-200 hover:bg-info-300 dark:bg-info-900/40 dark:hover:bg-info-900/60 cursor-pointer',
       'Occupied-CheckedIn': 'bg-accent-300 hover:bg-accent-400 dark:bg-accent-800/50 dark:hover:bg-accent-800/70 cursor-pointer',
@@ -110,7 +92,7 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
       [RoomStatus.OutOfService]: 'bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-500',
   };
   
-    const handleCellClick = (cell: CalendarCell, room: Room, dayIndex: number) => {
+    const handleCellClick = (cell, room, dayIndex) => {
         if (cell.reservation) {
             onCellClick(cell.reservation);
         } else if (cell.status === RoomStatus.Available) {
@@ -123,7 +105,7 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
         }
     };
 
-  const handleMouseEnter = (roomIndex: number, dayIndex: number, cell: CalendarCell) => {
+  const handleMouseEnter = (roomIndex, dayIndex, cell) => {
       if (cell.reservation) {
           const guest = guestsMap.get(cell.reservation.guestId);
           const content = (
@@ -179,12 +161,10 @@ const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations
                         {roomsWithActions.has(room.id) && (
                             <div className="ml-auto flex items-center gap-1.5">
                                 {roomsWithActions.get(room.id)?.hasUpcomingReservation && 
-                                    // FIX: Wrapped icon in a span to apply the title attribute, resolving a prop-type error.
                                     <span title="Upcoming Reservation">
                                         <ReservationIcon className="text-base text-info-500" />
                                     </span>}
                                 {roomsWithActions.get(room.id)?.hasPendingTask && 
-                                    // FIX: Wrapped icon in a span to apply the title attribute, resolving a prop-type error.
                                     <span title="Pending Task">
                                         <HousekeepingIcon className="text-base text-accent-600" />
                                     </span>}

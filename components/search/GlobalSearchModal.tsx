@@ -1,27 +1,17 @@
+
 import React, { useState, useMemo } from 'react';
 import Modal from '../common/Modal';
 import Input from '../common/Input';
-import { Guest, Reservation, Room, GlobalSearchResult, Page } from '../../types';
-// FIX: Imported IconProps to ensure type consistency for icon components.
-import { GuestIcon, ReservationIcon, BedIcon, IconProps } from '../icons';
+import { GuestIcon, ReservationIcon, BedIcon } from '../icons';
 
-interface GlobalSearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  guests: Guest[];
-  reservations: Reservation[];
-  rooms: Room[];
-  onNavigate: (page: Page, data?: any) => void;
-}
-
-const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, guests, reservations, rooms, onNavigate }) => {
+const GlobalSearchModal = ({ isOpen, onClose, guests, reservations, rooms, onNavigate }) => {
   const [query, setQuery] = useState('');
   
-  const searchResults: GlobalSearchResult[] = useMemo(() => {
+  const searchResults = useMemo(() => {
     if (query.length < 2) return [];
 
     const lowerCaseQuery = query.toLowerCase();
-    const results: GlobalSearchResult[] = [];
+    const results = [];
 
     // Search Guests
     guests.forEach(guest => {
@@ -66,9 +56,9 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, 
     return results;
   }, [query, guests, reservations, rooms]);
 
-  const handleResultClick = (result: GlobalSearchResult) => {
+  const handleResultClick = (result) => {
     if (result.type === 'Guest') {
-        onNavigate('GuestProfile', result.data as Guest);
+        onNavigate('GuestProfile', result.data);
     }
     // For reservations and rooms, a more advanced navigation/modal system would be needed.
     // For now, we can navigate to the relevant page.
@@ -82,8 +72,7 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, 
     setQuery('');
   };
 
-  // FIX: Updated icon prop type to use imported IconProps and removed redundant 'key' from the li element.
-  const ResultItem = ({ result, icon: Icon }: { result: GlobalSearchResult; icon: React.FC<IconProps> }) => (
+  const ResultItem = ({ result, icon: Icon }) => (
     <li
         onClick={() => handleResultClick(result)}
         className="p-3 flex items-center gap-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg cursor-pointer transition-colors"
@@ -101,6 +90,7 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Global Search">
         <div className="space-y-4">
+            {/* FIX: Add missing className prop. */}
             <Input
                 label=""
                 id="global-search"
@@ -108,6 +98,7 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, 
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search for guests, reservations, rooms..."
                 autoFocus
+                className=""
             />
             <div className="max-h-96 overflow-y-auto">
                 {query.length >= 2 && searchResults.length === 0 ? (

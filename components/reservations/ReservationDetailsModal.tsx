@@ -1,19 +1,10 @@
+
 import React from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-import { Reservation, Guest, Room, RoomType } from '../../types';
 import { ReservationStatusBadge } from '../common/StatusBadge';
 
-interface ReservationDetailsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  reservation: Reservation | null;
-  guest?: Guest;
-  room?: Room;
-  roomType?: RoomType;
-}
-
-const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = ({
+const ReservationDetailsModal = ({
   isOpen,
   onClose,
   reservation,
@@ -61,7 +52,8 @@ const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = ({
         </div>
 
         <div className="flex justify-end pt-4 border-t dark:border-neutral-700 mt-6">
-          <Button variant="secondary" onClick={onClose}>
+          {/* FIX: Add missing className prop. */}
+          <Button variant="secondary" onClick={onClose} className="">
             Close
           </Button>
         </div>

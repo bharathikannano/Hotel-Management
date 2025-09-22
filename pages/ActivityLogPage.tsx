@@ -1,21 +1,17 @@
+
 import React, { useState, useMemo } from 'react';
-import { ActivityLog } from '../types';
 import Input from '../components/common/Input';
 import Card from '../components/common/Card';
 import { CheckInIcon, CheckOutIcon, ReservationIcon, GuestIcon } from '../components/icons';
 
-interface ActivityLogPageProps {
-    activityLog: ActivityLog[];
-}
-
-const iconMap: { [key in ActivityLog['type']]: React.FC<{className?: string}> } = {
+const iconMap = {
   'Check-In': CheckInIcon,
   'Check-Out': CheckOutIcon,
   'New Reservation': ReservationIcon,
   'New Guest': GuestIcon,
 };
 
-const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ activityLog }) => {
+const ActivityLogPage = ({ activityLog }) => {
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
     const filteredLogs = useMemo(() => {
@@ -36,12 +32,14 @@ const ActivityLogPage: React.FC<ActivityLogPageProps> = ({ activityLog }) => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                  <h1 className="text-3xl font-bold text-neutral-800 dark:text-neutral-100">Activity Log</h1>
                  <div className="w-full sm:w-auto">
+                    {/* FIX: Add missing className prop. */}
                     <Input
                         label="Select a date"
                         id="date-filter"
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
+                        className=""
                     />
                  </div>
             </div>

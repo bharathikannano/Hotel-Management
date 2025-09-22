@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
 import { CloseIcon, SuccessIcon, ErrorIcon, InfoIcon } from '../icons';
-import { ToastMessage } from '../../types';
-
-interface ToastProps {
-  toast: ToastMessage;
-  onClose: (id: string) => void;
-}
 
 const toastConfig = {
   success: {
@@ -32,7 +26,7 @@ const toastConfig = {
 };
 
 
-const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
+const Toast = ({ toast, onClose }) => {
   const { id, message, type } = toast;
   const config = toastConfig[type];
 

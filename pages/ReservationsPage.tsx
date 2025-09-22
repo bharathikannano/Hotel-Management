@@ -1,30 +1,23 @@
+
 import React, { useState, useMemo } from 'react';
-import Table, { Column } from '../components/common/Table';
+import Table from '../components/common/Table';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import { EditIcon, DeleteIcon, CheckOutIcon } from '../components/icons';
-import { Reservation, ReservationStatus, Guest, Room, RoomStatus, Payment, ReservationModalData, User, Role } from '../types';
+import { ReservationStatus, Role } from '../types';
 import { mockGuests, mockRooms, mockPayments } from '../data';
 import PaymentModal from '../components/common/PaymentModal';
 import ConfirmationModal from '../components/common/ConfirmationModal';
 import { ReservationStatusBadge } from '../components/common/StatusBadge';
 
-interface ReservationsPageProps {
-    reservations: Reservation[];
-    onOpenModal: (data: ReservationModalData) => void;
-    onDeleteReservation: (id: string) => void;
-    currentUser: User;
-}
-
-
-const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpenModal, onDeleteReservation, currentUser }) => {
-    const [rooms, setRooms] = useState<Room[]>(mockRooms);
-    const [payments, setPayments] = useState<Payment[]>(mockPayments);
+const ReservationsPage = ({ reservations, onOpenModal, onDeleteReservation, currentUser }) => {
+    const [rooms, setRooms] = useState(mockRooms);
+    const [payments, setPayments] = useState(mockPayments);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-    const [checkingOutReservation, setCheckingOutReservation] = useState<Reservation | null>(null);
+    const [checkingOutReservation, setCheckingOutReservation] = useState(null);
     const [filter, setFilter] = useState('');
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-    const [reservationToDelete, setReservationToDelete] = useState<string | null>(null);
+    const [reservationToDelete, setReservationToDelete] = useState(null);
     
     const guestsMap = useMemo(() => new Map(mockGuests.map(g => [g.id, g])), []);
     const roomsMap = useMemo(() => new Map(rooms.map(r => [r.id, r])), [rooms]);
@@ -37,15 +30,15 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
         }), [reservations, filter, guestsMap]
     );
 
-    const handleCheckout = (reservation: Reservation) => {
+    const handleCheckout = (reservation) => {
         setCheckingOutReservation(reservation);
         setIsPaymentModalOpen(true);
     };
 
-    const handleConfirmCheckout = (paymentMethod: Payment['method']) => {
+    const handleConfirmCheckout = (paymentMethod) => {
         if (checkingOutReservation) {
             // In a real app, this would involve more logic like updating room status etc.
-            // which is handled in App.tsx handleSaveReservation
+            // which is handled in App.jsx handleSaveReservation
             const updatedReservation = { ...checkingOutReservation, status: ReservationStatus.CheckedOut };
             // Simulate saving the reservation update by passing the full object to onOpenModal
             onOpenModal(updatedReservation); 
@@ -58,7 +51,7 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
         setCheckingOutReservation(null);
     };
     
-    const handleDelete = (id: string) => {
+    const handleDelete = (id) => {
         setReservationToDelete(id);
         setIsDeleteConfirmOpen(true);
     };
@@ -75,7 +68,7 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
         setReservationToDelete(null);
     };
     
-    const columns: Column<Reservation>[] = [
+    const columns = [
         { header: 'Guest', accessor: (item) => {
             const guest = guestsMap.get(item.guestId);
             return guest ? `${guest.firstName} ${guest.lastName}` : 'N/A';
@@ -90,7 +83,8 @@ const ReservationsPage: React.FC<ReservationsPageProps> = ({ reservations, onOpe
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <div className="w-full md:w-1/3">
-                    <Input label="" id="search" type="text" placeholder="Search by guest name or reservation ID..." value={filter} onChange={e => setFilter(e.target.value)} />
+                    {/* FIX: Add missing className prop. */}
+                    <Input label="" id="search" type="text" placeholder="Search by guest name or reservation ID..." value={filter} onChange={e => setFilter(e.target.value)} className="" />
                 </div>
                 <Button onClick={() => onOpenModal(null)} className="w-full md:w-auto">New Reservation</Button>
             </div>

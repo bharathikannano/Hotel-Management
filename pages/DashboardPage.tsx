@@ -1,22 +1,13 @@
+
 import React from 'react';
 import Card from '../components/common/Card';
-import { Reservation, Room, RoomStatus, ReservationStatus, Guest, HousekeepingTask, TaskStatus, ActivityLog, Page } from '../types';
+import { RoomStatus, ReservationStatus, TaskStatus } from '../types';
 import { BedIcon, DeparturesIcon } from '../components/icons';
 import ActivityLogCard from '../components/dashboard/ActivityLogCard';
 
-interface DashboardPageProps {
-  reservations: Reservation[];
-  rooms: Room[];
-  guests: Guest[];
-  tasks: HousekeepingTask[];
-  activityLog: ActivityLog[];
-  onNavigate: (page: Page) => void;
-}
-
-const DashboardPage: React.FC<DashboardPageProps> = ({ reservations, rooms, guests, tasks, activityLog, onNavigate }) => {
+const DashboardPage = ({ reservations, rooms, guests, tasks, activityLog, onNavigate }) => {
   const today = new Date().toISOString().split('T')[0];
-  // FIX: Explicitly typed guestsMap as Map<string, Guest> to ensure correct type inference for guest objects.
-  const guestsMap = new Map<string, Guest>(guests.map(g => [g.id, g]));
+  const guestsMap = new Map(guests.map(g => [g.id, g]));
 
   const availableRooms = rooms.filter(r => r.status === RoomStatus.Available).length;
   const occupiedRooms = rooms.filter(r => r.status === RoomStatus.Occupied).length;

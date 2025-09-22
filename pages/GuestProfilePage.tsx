@@ -1,28 +1,19 @@
 
 import React, { useState, useMemo } from 'react';
-import { Guest, Reservation, Room, Page, RoomType, ReservationStatus } from '../types';
-import Table, { Column } from '../components/common/Table';
+import Table from '../components/common/Table';
 import Button from '../components/common/Button';
 import { ReservationStatusBadge } from '../components/common/StatusBadge';
 import ReservationDetailsModal from '../components/reservations/ReservationDetailsModal';
 import { InfoIcon } from '../components/icons';
 import Card from '../components/common/Card';
+import { ReservationStatus } from '../types';
 
-interface GuestProfilePageProps {
-  guest: Guest;
-  reservations: Reservation[];
-  roomsMap: Map<string, Room>;
-  roomTypesMap: Map<string, RoomType>;
-  onNavigate: (page: Page) => void;
-  onSaveNotes: (guestId: string, notes: string) => void;
-}
-
-const GuestProfilePage: React.FC<GuestProfilePageProps> = ({ guest, reservations, roomsMap, roomTypesMap, onNavigate, onSaveNotes }) => {
+const GuestProfilePage = ({ guest, reservations, roomsMap, roomTypesMap, onNavigate, onSaveNotes }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+  const [selectedReservation, setSelectedReservation] = useState(null);
   const [notes, setNotes] = useState(guest.notes || '');
 
-  const handleOpenDetails = (reservation: Reservation) => {
+  const handleOpenDetails = (reservation) => {
     setSelectedReservation(reservation);
     setIsDetailsModalOpen(true);
   };
@@ -49,7 +40,7 @@ const GuestProfilePage: React.FC<GuestProfilePageProps> = ({ guest, reservations
   }, [reservations]);
 
 
-  const columns: Column<Reservation>[] = [
+  const columns = [
     { 
       header: 'Room', 
       accessor: (item) => roomsMap.get(item.roomId)?.roomNumber || 'N/A', 
@@ -69,7 +60,8 @@ const GuestProfilePage: React.FC<GuestProfilePageProps> = ({ guest, reservations
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h1 className="text-3xl font-bold text-neutral-800 dark:text-neutral-100">{guest.firstName} {guest.lastName}'s Profile</h1>
-          <Button variant="secondary" onClick={() => onNavigate('Guests')}>
+          {/* FIX: Add missing className prop. */}
+          <Button variant="secondary" onClick={() => onNavigate('Guests')} className="">
             &larr; Back to All Guests
           </Button>
         </div>

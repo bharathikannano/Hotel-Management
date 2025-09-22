@@ -2,13 +2,8 @@
 import React, { useState } from 'react';
 import Button from '../common/Button';
 import Input from '../common/Input';
-import { Feedback } from '../../types';
 
-interface GuestFeedbackFormProps {
-    onSubmit: (data: Omit<Feedback, 'id' | 'dateSubmitted'>) => void;
-}
-
-const StarRating = ({ rating, setRating }: { rating: number; setRating: (rating: number) => void }) => {
+const StarRating = ({ rating, setRating }) => {
     return (
         <div className="flex items-center">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -29,7 +24,7 @@ const StarRating = ({ rating, setRating }: { rating: number; setRating: (rating:
 };
 
 
-const GuestFeedbackForm: React.FC<GuestFeedbackFormProps> = ({ onSubmit }) => {
+const GuestFeedbackForm = ({ onSubmit }) => {
     const [guestName, setGuestName] = useState('');
     const [roomNumber, setRoomNumber] = useState('');
     const [rating, setRating] = useState(0);
@@ -37,7 +32,7 @@ const GuestFeedbackForm: React.FC<GuestFeedbackFormProps> = ({ onSubmit }) => {
     const [suggestions, setSuggestions] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (rating === 0 || !guestName || !comments) {
             setError('Please provide your name, a rating, and your comments.');
@@ -62,19 +57,23 @@ const GuestFeedbackForm: React.FC<GuestFeedbackFormProps> = ({ onSubmit }) => {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            {/* FIX: Add missing className prop. */}
             <Input
                 label="Your Full Name"
                 id="guestName"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
                 required
+                className=""
             />
+            {/* FIX: Add missing className prop. */}
             <Input
                 label="Room Number (Optional)"
                 id="roomNumber"
                 value={roomNumber}
                 onChange={(e) => setRoomNumber(e.target.value)}
                 placeholder="e.g., 101"
+                className=""
             />
             <div>
                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
@@ -115,7 +114,8 @@ const GuestFeedbackForm: React.FC<GuestFeedbackFormProps> = ({ onSubmit }) => {
             {error && <p className="text-danger-500 text-sm">{error}</p>}
 
             <div className="flex justify-end pt-4 border-t dark:border-neutral-700 mt-4">
-                <Button type="submit">Submit Feedback</Button>
+                {/* FIX: Add missing className prop. */}
+                <Button type="submit" className="">Submit Feedback</Button>
             </div>
         </form>
     );

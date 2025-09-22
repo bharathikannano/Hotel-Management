@@ -1,17 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { RevenueReport } from '../../types';
-// FIX: Added 'Chart' to the import list to resolve a type error.
-import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-interface RevenueChartProps {
-    data: RevenueReport[];
-}
-
-const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
-    const chartRef = useRef<HTMLCanvasElement>(null);
-    const chartInstanceRef = useRef<Chart | null>(null);
+const RevenueChart = ({ data }) => {
+    const chartRef = useRef(null);
+    const chartInstanceRef = useRef(null);
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -38,7 +32,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
             const chartBgColor = isDarkMode ? primary500_bg : primary600_bg;
             const chartBorderColor = isDarkMode ? primary500 : primary600;
 
-            const config: ChartConfiguration = {
+            const config = {
                 type: 'bar',
                 data: {
                     labels: labels,

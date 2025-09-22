@@ -1,37 +1,25 @@
 
-
 import React, { useState, useMemo } from 'react';
-import Table, { Column } from '../components/common/Table';
-import { Room, RoomStatus, RoomType, Reservation, Guest, ReservationModalData, HousekeepingTask, RoomTypeEnum } from '../types';
+import Table from '../components/common/Table';
+import { RoomStatus } from '../types';
 import { RoomStatusBadge } from '../components/common/StatusBadge';
 import RoomDetailsModal from '../components/rooms/RoomDetailsModal';
 import RoomCalendarView from '../components/rooms/RoomCalendarView';
 import Select from '../components/common/Select';
 import { CalendarIcon, ListIcon } from '../components/icons';
 
-interface RoomsPageProps {
-  rooms: Room[];
-  roomTypes: RoomType[];
-  reservations: Reservation[];
-  guests: Guest[];
-  tasks: HousekeepingTask[];
-  onOpenModal: (data: ReservationModalData) => void;
-  onUpdateRoomStatus: (roomId: string, newStatus: RoomStatus) => void;
-  onSaveRoomType: (roomTypeId: string, updatedData: Partial<Omit<RoomType, 'id'>>) => void;
-}
-
-const statusOrder: Record<RoomStatus, number> = {
+const statusOrder = {
     [RoomStatus.Available]: 1,
     [RoomStatus.Occupied]: 2,
     [RoomStatus.Dirty]: 3,
     [RoomStatus.OutOfService]: 4,
 };
 
-const RoomsPage: React.FC<RoomsPageProps> = ({ rooms, roomTypes, reservations, guests, tasks, onOpenModal, onUpdateRoomStatus, onSaveRoomType }) => {
-    const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-    const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
-    const [statusFilter, setStatusFilter] = useState<RoomStatus | ''>('');
-    const [typeFilter, setTypeFilter] = useState<string | ''>('');
+const RoomsPage = ({ rooms, roomTypes, reservations, guests, tasks, onOpenModal, onUpdateRoomStatus, onSaveRoomType }) => {
+    const [selectedRoom, setSelectedRoom] = useState(null);
+    const [viewMode, setViewMode] = useState('list');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [typeFilter, setTypeFilter] = useState('');
     
     const roomTypesMap = useMemo(() => new Map(roomTypes.map(rt => [rt.id, rt])), [roomTypes]);
     const guestsMap = useMemo(() => new Map(guests.map(g => [g.id, g])), [guests]);
@@ -44,7 +32,7 @@ const RoomsPage: React.FC<RoomsPageProps> = ({ rooms, roomTypes, reservations, g
       });
     }, [rooms, statusFilter, typeFilter]);
 
-    const columns: Column<Room>[] = [
+    const columns = [
         { 
             header: 'Room No.', 
             accessor: (item) => {
@@ -92,11 +80,13 @@ const RoomsPage: React.FC<RoomsPageProps> = ({ rooms, roomTypes, reservations, g
 
             {viewMode === 'list' && (
               <div className="flex flex-col sm:flex-row gap-4 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg border dark:border-neutral-700">
-                <Select id="statusFilter" label="Filter by Status" value={statusFilter} onChange={e => setStatusFilter(e.target.value as RoomStatus | '')}>
+                {/* FIX: Add missing className prop. */}
+                <Select id="statusFilter" label="Filter by Status" value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="">
                   <option value="">All Statuses</option>
                   {Object.values(RoomStatus).map(s => <option key={s} value={s}>{s}</option>)}
                 </Select>
-                <Select id="typeFilter" label="Filter by Type" value={typeFilter} onChange={e => setTypeFilter(e.target.value)}>
+                {/* FIX: Add missing className prop. */}
+                <Select id="typeFilter" label="Filter by Type" value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="">
                   <option value="">All Types</option>
                   {roomTypes.map(rt => <option key={rt.id} value={rt.id}>{rt.name}</option>)}
                 </Select>

@@ -1,24 +1,17 @@
+
 import React from 'react';
-import { Page, User, Role } from '../../types';
+import { Role } from '../../types';
 import { DashboardIcon, ReservationIcon, GuestIcon, BedIcon, HousekeepingIcon, ReportIcon, UserIcon, LogoutIcon, FeedbackIcon, HistoryIcon } from '../icons';
 
-interface SidebarProps {
-  currentPage: Page;
-  user: User;
-  onNavigate: (page: Page) => void;
-  onLogout: () => void;
-  isSidebarOpen: boolean;
-}
-
-// FIX: Defined a NavItem type to handle the optional 'name' property, resolving a TypeScript error.
+// FIX: Define a type for navigation items for better type safety.
 type NavItem = {
-  page: Page;
+  page: string;
   name?: string;
-  icon: React.FC<{ className?: string }>;
-  roles: ReadonlyArray<Role>;
+  icon: React.ComponentType<{ className?: string }>;
+  roles: Array<(typeof Role)[keyof typeof Role]>;
 };
 
-const navItems: ReadonlyArray<NavItem> = [
+const navItems: NavItem[] = [
   { page: 'Dashboard', icon: DashboardIcon, roles: [Role.Admin, Role.Manager, Role.FrontDesk] },
   { page: 'Reservations', icon: ReservationIcon, roles: [Role.Admin, Role.Manager, Role.FrontDesk] },
   { page: 'Guests', icon: GuestIcon, roles: [Role.Admin, Role.Manager, Role.FrontDesk] },
@@ -32,7 +25,7 @@ const navItems: ReadonlyArray<NavItem> = [
 ];
 
 
-const Sidebar: React.FC<SidebarProps> = ({ currentPage, user, onNavigate, onLogout, isSidebarOpen }) => {
+const Sidebar = ({ currentPage, user, onNavigate, onLogout, isSidebarOpen }) => {
   return (
     <aside className={`fixed inset-y-0 left-0 bg-primary-900 text-primary-200 w-64 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col z-40`}>
         <div className="flex items-center justify-center h-20 border-b border-primary-700">

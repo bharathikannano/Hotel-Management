@@ -1,13 +1,7 @@
 import React from 'react';
-import { ToastMessage } from '../../types';
 import Toast from './Toast';
 
-interface ToastContainerProps {
-  toasts: ToastMessage[];
-  onRemove: (id: string) => void;
-}
-
-const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onRemove }) => {
+const ToastContainer = ({ toasts, onRemove }) => {
   return (
     <div
       aria-live="polite"

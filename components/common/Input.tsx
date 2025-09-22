@@ -1,12 +1,6 @@
-
 import React from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  id: string;
-}
-
-const Input: React.FC<InputProps> = ({ label, id, className, ...props }) => {
+const Input = ({ label, id, className, ...props }) => {
   return (
     <div>
       {label && <label htmlFor={id} className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">

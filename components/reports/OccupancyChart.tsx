@@ -1,17 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { OccupancyReport } from '../../types';
-// FIX: Added 'Chart' to the import list to resolve a type error.
-import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-interface OccupancyChartProps {
-    data: OccupancyReport[];
-}
-
-const OccupancyChart: React.FC<OccupancyChartProps> = ({ data }) => {
-    const chartRef = useRef<HTMLCanvasElement>(null);
-    const chartInstanceRef = useRef<Chart | null>(null);
+const OccupancyChart = ({ data }) => {
+    const chartRef = useRef(null);
+    const chartInstanceRef = useRef(null);
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -37,7 +31,7 @@ const OccupancyChart: React.FC<OccupancyChartProps> = ({ data }) => {
             const chartBgColor = isDarkMode ? 'rgba(130, 154, 177, 0.2)' : 'rgba(98, 125, 152, 0.2)';
 
 
-            const config: ChartConfiguration = {
+            const config = {
                 type: 'line',
                 data: {
                     labels: labels,

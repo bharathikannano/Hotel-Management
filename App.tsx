@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
@@ -20,39 +19,57 @@ import TaskModal from './components/housekeeping/TaskModal';
 import ToastContainer from './components/common/ToastContainer';
 import ConfirmationModal from './components/common/ConfirmationModal';
 import GlobalSearchModal from './components/search/GlobalSearchModal';
-// FIX: Added 'Role' to the import list to resolve 'Cannot find name' error and removed duplicate 'RoomStatus'.
-import { Page, User, Reservation, Guest, Room, HousekeepingTask, ReservationModalData, RoomType, ReservationStatus, RoomStatus, Role, Guest as GuestType, ToastMessage, Theme, HousekeepingTaskModalData, TaskStatus, Feedback, ActivityLog } from './types';
+import { Role, ReservationStatus, RoomStatus, TaskStatus } from './types';
 import { mockUsers, mockReservations, mockGuests, mockRooms, mockHousekeepingTasks, mockRoomTypes, mockActivityLog } from './data';
+
+// FIX: Define types for mock data to ensure type safety across the application.
+type User = (typeof mockUsers)[0];
+type Reservation = (typeof mockReservations)[0];
+type Guest = (typeof mockGuests)[0];
+type Room = (typeof mockRooms)[0];
+type Task = (typeof mockHousekeepingTasks)[0];
+type RoomType = (typeof mockRoomTypes)[0];
+type Activity = (typeof mockActivityLog)[0];
+type Feedback = {
+  id: string;
+  dateSubmitted: string;
+  guestName: string;
+  roomNumber?: string;
+  rating: number;
+  comments: string;
+  suggestions?: string;
+};
 
 function App() {
   // --- STATE MANAGEMENT ---
+  // FIX: Apply explicit types to state variables.
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [currentPage, setCurrentPage] = useState<Page>('Dashboard');
+  const [currentPage, setCurrentPage] = useState('Dashboard');
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [guests, setGuests] = useState<Guest[]>(mockGuests);
   const [rooms, setRooms] = useState<Room[]>(mockRooms);
-  const [tasks, setTasks] = useState<HousekeepingTask[]>(mockHousekeepingTasks);
+  const [tasks, setTasks] = useState<Task[]>(mockHousekeepingTasks);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
-  const [activityLog, setActivityLog] = useState<ActivityLog[]>(mockActivityLog);
+  const [activityLog, setActivityLog] = useState<Activity[]>(mockActivityLog);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>(mockRoomTypes);
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [toasts, setToasts] = useState<{ id: string; message: string; type: string; }[]>([]);
   
   // Profile page state
-  const [viewingGuest, setViewingGuest] = useState<GuestType | null>(null);
+  const [viewingGuest, setViewingGuest] = useState<Guest | null>(null);
 
   // Modal State
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
-  const [reservationModalData, setReservationModalData] = useState<ReservationModalData>(null);
+  const [reservationModalData, setReservationModalData] = useState<Reservation | Partial<Reservation> | null>(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<HousekeepingTaskModalData>(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
 
   // UI State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
     return savedTheme || 'system';
   });
 
@@ -60,7 +77,7 @@ function App() {
   useEffect(() => {
     const root = window.document.documentElement;
 
-    const applyTheme = (t: Theme) => {
+    const applyTheme = (t: string) => {
         if (t === 'system') {
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             root.classList.toggle('dark', systemTheme === 'dark');
@@ -87,7 +104,7 @@ function App() {
     };
   }, [theme]);
 
-  const handleThemeChange = (newTheme: Theme) => {
+  const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
   };
 
@@ -111,7 +128,7 @@ function App() {
   }
   
   // --- TOAST NOTIFICATIONS ---
-  const addToast = (message: string, type: ToastMessage['type'] = 'success') => {
+  const addToast = (message: string, type = 'success') => {
     const id = Date.now().toString();
     setToasts(prev => [...prev, { id, message, type }]);
   };
@@ -121,9 +138,9 @@ function App() {
   };
 
   // --- NAVIGATION ---
-  const handleNavigate = (page: Page, data?: any) => {
+  const handleNavigate = (page: string, data?: any) => {
     if (page === 'GuestProfile' && data) {
-      handleViewGuestProfile(data as GuestType);
+      handleViewGuestProfile(data);
     } else {
       setCurrentPage(page);
       setViewingGuest(null); // Reset guest profile view on navigation
@@ -133,13 +150,13 @@ function App() {
     }
   };
 
-  const handleViewGuestProfile = (guest: GuestType) => {
+  const handleViewGuestProfile = (guest: Guest) => {
     setViewingGuest(guest);
     setCurrentPage('GuestProfile');
   };
 
   // --- MODAL HANDLING ---
-  const handleOpenReservationModal = (data: ReservationModalData) => {
+  const handleOpenReservationModal = (data: Reservation | Partial<Reservation> | null) => {
     setReservationModalData(data);
     setIsReservationModalOpen(true);
   };
@@ -149,7 +166,7 @@ function App() {
     setReservationModalData(null);
   };
 
-  const handleOpenTaskModal = (task: HousekeepingTask | null) => {
+  const handleOpenTaskModal = (task: Task | null) => {
     setEditingTask(task);
     setIsTaskModalOpen(true);
   };
@@ -160,9 +177,9 @@ function App() {
   };
 
   // --- DATA MUTATIONS ---
-  const handleSaveReservation = (data: Omit<Reservation, 'id'>, id?: string) => {
+  const handleSaveReservation = (data: Partial<Reservation>, id?: string) => {
     if (id) {
-      setReservations(prev => prev.map(r => r.id === id ? { ...r, ...data } : r));
+      setReservations(prev => prev.map(r => r.id === id ? { ...r, ...data } as Reservation : r));
       // Update room status if reservation status changed
       const originalReservation = reservations.find(r => r.id === id);
       if (originalReservation && originalReservation.status !== data.status) {
@@ -180,7 +197,7 @@ function App() {
       }
       addToast('Reservation updated successfully!');
     } else {
-      const newReservation: Reservation = { ...data, id: `res-${Date.now()}` };
+      const newReservation = { ...data, id: `res-${Date.now()}` } as Reservation;
       setReservations(prev => [newReservation, ...prev]);
       if (newReservation.status === ReservationStatus.CheckedIn) {
          setRooms(prev => prev.map(room => room.id === newReservation.roomId ? {...room, status: RoomStatus.Occupied} : room));
@@ -196,12 +213,12 @@ function App() {
   };
   
   const handleAddGuest = (guestData: Omit<Guest, 'id'>) => {
-    const newGuest: Guest = { ...guestData, id: `guest-${Date.now()}` };
+    const newGuest = { ...guestData, id: `guest-${Date.now()}` };
     setGuests(prev => [newGuest, ...prev]);
     addToast('Guest added successfully!');
   };
   
-  const handleUpdateGuest = (id: string, guestData: Omit<Guest, 'id'>) => {
+  const handleUpdateGuest = (id: string, guestData: Partial<Guest>) => {
     setGuests(prev => prev.map(g => g.id === id ? { ...g, ...guestData } : g));
     addToast('Guest updated successfully!');
   };
@@ -218,13 +235,13 @@ function App() {
     addToast('Guest and their reservations deleted.', 'info');
   };
 
-  const handleSaveTask = (data: Omit<HousekeepingTask, 'id' | 'date'>, id?: string) => {
+  const handleSaveTask = (data: Partial<Task>, id?: string) => {
     if (id) {
         // Update
         const taskToUpdate = tasks.find(t => t.id === id);
         if (!taskToUpdate) return;
         
-        const updatedTask = { ...taskToUpdate, ...data };
+        const updatedTask = { ...taskToUpdate, ...data } as Task;
         setTasks(prev => prev.map(t => t.id === id ? updatedTask : t));
 
         // Check if room status should be updated
@@ -237,11 +254,11 @@ function App() {
         }
     } else {
         // Create
-        const newTask: HousekeepingTask = {
+        const newTask = {
             ...data,
             id: `task-${Date.now()}`,
             date: new Date().toISOString().split('T')[0],
-        };
+        } as Task;
         setTasks(prev => [newTask, ...prev]);
         addToast('Task created successfully!');
     }
@@ -253,13 +270,13 @@ function App() {
     addToast('Task deleted.', 'info');
   };
 
-  const handleUpdateRoomStatus = (roomId: string, status: RoomStatus) => {
+  const handleUpdateRoomStatus = (roomId: string, status: (typeof RoomStatus)[keyof typeof RoomStatus]) => {
     setRooms(prev => prev.map(r => r.id === roomId ? { ...r, status } : r));
     const room = rooms.find(r => r.id === roomId);
     addToast(`Room ${room?.roomNumber} status updated to ${status}.`, 'info');
   };
 
-  const handleSaveRoomType = (roomTypeId: string, updatedData: Partial<Omit<RoomType, 'id'>>) => {
+  const handleSaveRoomType = (roomTypeId: string, updatedData: Partial<RoomType>) => {
     setRoomTypes(prev => prev.map(rt => rt.id === roomTypeId ? { ...rt, ...updatedData } : rt));
     addToast('Room type details updated successfully!');
   };
