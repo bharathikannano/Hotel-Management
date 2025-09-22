@@ -159,7 +159,6 @@ The `components/common/` directory contains the building blocks of the UI:
 
 - A modern web browser (e.g., Chrome, Firefox, Safari, Edge).
 - A simple local web server. The [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension for VS Code is a great option.
-- [Node.js and npm](https://nodejs.org/en/download/) (for deployment).
 
 ### 6.2. Installation & Launch
 
@@ -181,32 +180,33 @@ Use any of the following usernames to log in. **Any password will be accepted.**
 
 ## 7. Deployment to GitHub Pages
 
-This project is configured for easy deployment to GitHub Pages using the `gh-pages` package.
+This project is configured for a simple, one-command deployment to GitHub Pages. Because this is a zero-build application, the deployment process directly publishes your source files without a build step.
 
 ### 7.1. Prerequisites
 
-- Your project must be a GitHub repository and pushed to GitHub.
+- Your project must be a GitHub repository.
+- You must have [Node.js and npm](https://nodejs.org/en/download/) installed locally.
 
 ### 7.2. Configuration
 
-1.  **Update `package.json`:** Open the `package.json` file and update the `homepage` field to match your GitHub Pages URL:
+1.  **Update `package.json`:** Before deploying, open the `package.json` file and set the `homepage` field to your GitHub Pages URL. It should follow this format:
     ```json
     "homepage": "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME",
     ```
-    Replace `YOUR_USERNAME` and `YOUR_REPO_NAME` with your actual GitHub username and repository name.
+    Replace `YOUR_USERNAME` and `YOUR_REPO_NAME` accordingly.
 
 ### 7.3. Deployment Steps
 
-1.  **Install Dependencies:** Open your terminal in the project root and run:
+1.  **Install Dependency:** Open your terminal in the project's root directory and run this command once to install the deployment tool:
     ```bash
     npm install
     ```
-2.  **Run the Deploy Script:** Once the dependencies are installed, run the deploy command:
+2.  **Deploy:** After the installation is complete, run the deploy script:
     ```bash
     npm run deploy
     ```
 
-This will create a `gh-pages` branch (if it doesn't exist), push your project files to it, and your site will be live at the URL specified in the `homepage` field shortly.
+This command will publish the contents of your project directory to a `gh-pages` branch on your GitHub repository. Your application will then be live at the URL you specified in the `homepage` field.
 
 ---
 
