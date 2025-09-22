@@ -1,6 +1,7 @@
 import React from 'react';
 
-interface IconProps {
+// FIX: Exported IconProps interface to allow its use in other components for type safety.
+export interface IconProps {
   className?: string;
 }
 

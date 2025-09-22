@@ -20,7 +20,8 @@ interface CalendarCell {
 
 const RoomCalendarView: React.FC<RoomCalendarViewProps> = ({ rooms, reservations, tasks, guestsMap, roomTypesMap, onCellClick }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [tooltip, setTooltip] = useState<{ room: number; day: number; content: JSX.Element } | null>(null);
+  // FIX: Changed type from JSX.Element to React.ReactNode to resolve 'Cannot find namespace' error.
+  const [tooltip, setTooltip] = useState<{ room: number; day: number; content: React.ReactNode } | null>(null);
 
   const statusIndicatorColor: Record<RoomStatus, string> = {
     [RoomStatus.Available]: 'bg-success-500',

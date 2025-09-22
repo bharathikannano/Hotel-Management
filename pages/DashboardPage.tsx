@@ -15,7 +15,8 @@ interface DashboardPageProps {
 
 const DashboardPage: React.FC<DashboardPageProps> = ({ reservations, rooms, guests, tasks, activityLog, onNavigate }) => {
   const today = new Date().toISOString().split('T')[0];
-  const guestsMap = new Map(guests.map(g => [g.id, g]));
+  // FIX: Explicitly typed guestsMap as Map<string, Guest> to ensure correct type inference for guest objects.
+  const guestsMap = new Map<string, Guest>(guests.map(g => [g.id, g]));
 
   const availableRooms = rooms.filter(r => r.status === RoomStatus.Available).length;
   const occupiedRooms = rooms.filter(r => r.status === RoomStatus.Occupied).length;

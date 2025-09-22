@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import Modal from '../common/Modal';
 import Input from '../common/Input';
 import { Guest, Reservation, Room, GlobalSearchResult, Page } from '../../types';
-import { GuestIcon, ReservationIcon, BedIcon } from '../icons';
+// FIX: Imported IconProps to ensure type consistency for icon components.
+import { GuestIcon, ReservationIcon, BedIcon, IconProps } from '../icons';
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -81,9 +82,9 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, 
     setQuery('');
   };
 
-  const ResultItem = ({ result, icon: Icon }: { result: GlobalSearchResult; icon: React.FC<{className?: string}> }) => (
+  // FIX: Updated icon prop type to use imported IconProps and removed redundant 'key' from the li element.
+  const ResultItem = ({ result, icon: Icon }: { result: GlobalSearchResult; icon: React.FC<IconProps> }) => (
     <li
-        key={result.id}
         onClick={() => handleResultClick(result)}
         className="p-3 flex items-center gap-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg cursor-pointer transition-colors"
     >

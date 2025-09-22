@@ -117,8 +117,6 @@ A central `types.ts` file provides strict TypeScript definitions for all data st
 
 ## 5. Design System & UI/UX
 
-The application's visual identity is clean, professional, and built for clarity.
-
 ### 5.1. Color Palette
 
 The color system is defined in `index.html` and used throughout the app via Tailwind CSS utility classes.
@@ -180,7 +178,47 @@ Use any of the following usernames to log in. **Any password will be accepted.**
 
 ---
 
-## 7. Future Improvements
+## 7. Deployment to GitHub Pages
+
+While this project is set up as a zero-build environment, it can be adapted to a standard build process (e.g., using Create React App) for deployment. If you choose to do so, here are the steps to deploy the application to GitHub Pages:
+
+1.  **Install `gh-pages`:**
+    Add the `gh-pages` package as a development dependency to your project.
+    ```bash
+    npm install gh-pages --save-dev
+    ```
+
+2.  **Update `package.json`:**
+    Add a `homepage` property to your `package.json` file. This tells your app where it will be deployed.
+    ```json
+    "homepage": "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/",
+    ```
+    Replace `YOUR_USERNAME` with your GitHub username and `YOUR_REPO_NAME` with your repository's name.
+
+3.  **Add Deployment Scripts:**
+    In the `scripts` section of your `package.json`, add `predeploy` and `deploy` scripts.
+    ```json
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "predeploy": "npm run build",
+      "deploy": "gh-pages -d build"
+    },
+    ```
+    The `predeploy` script will automatically run the `build` script before deploying. The `deploy` script will push the contents of the `build` directory to your `gh-pages` branch.
+
+4.  **Deploy:**
+    Run the deployment script from your terminal.
+    ```bash
+    npm run deploy
+    ```
+    This will build your application and publish it to GitHub Pages.
+
+---
+
+## 8. Future Improvements
 
 - **Advanced State Management:** For larger applications, replace prop drilling with a dedicated state management library like Zustand or Redux Toolkit.
 - **Backend Integration:** Replace the mock data in `/data/index.ts` with asynchronous API calls to a real backend service.
