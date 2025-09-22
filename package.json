@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://bharathikannano.github.io/Hotel-Management",
   "scripts": {
-    "deploy": "gh-pages -d .",
+    "deploy": "npx gh-pages -d .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
