@@ -1,0 +1,5 @@
+{
+  "name": "Zenith Hotel Management",
+  "description": "A comprehensive and modern Hotel Management Dashboard built with React, TypeScript, and Tailwind CSS. It provides a full suite of features including reservation management, guest tracking, housekeeping, reporting, and user administration.",
+  "requestFramePermissions": []
+}
