@@ -180,41 +180,22 @@ Use any of the following usernames to log in. **Any password will be accepted.**
 
 ## 7. Deployment to GitHub Pages
 
-While this project is set up as a zero-build environment, it can be adapted to a standard build process (e.g., using Create React App) for deployment. If you choose to do so, here are the steps to deploy the application to GitHub Pages:
+This project is a zero-build environment, which makes deploying to GitHub Pages very straightforward. No build process or special packages are needed.
 
-1.  **Install `gh-pages`:**
-    Add the `gh-pages` package as a development dependency to your project.
-    ```bash
-    npm install gh-pages --save-dev
-    ```
+1.  **Repository Setup:**
+    Ensure all your project files (`index.html`, `index.tsx`, etc.) are committed and pushed to a GitHub repository.
 
-2.  **Update `package.json`:**
-    Add a `homepage` property to your `package.json` file. This tells your app where it will be deployed.
-    ```json
-    "homepage": "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/",
-    ```
-    Replace `YOUR_USERNAME` with your GitHub username and `YOUR_REPO_NAME` with your repository's name.
+2.  **Enable GitHub Pages:**
+    - Navigate to your repository on GitHub.
+    - Click on the **Settings** tab.
+    - In the left sidebar, click on **Pages**.
+    - Under "Build and deployment", for the "Source", select **Deploy from a branch**.
+    - Under "Branch", select your main branch (`main` or `master`), keep the folder as `/ (root)`, and click **Save**.
 
-3.  **Add Deployment Scripts:**
-    In the `scripts` section of your `package.json`, add `predeploy` and `deploy` scripts.
-    ```json
-    "scripts": {
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "predeploy": "npm run build",
-      "deploy": "gh-pages -d build"
-    },
-    ```
-    The `predeploy` script will automatically run the `build` script before deploying. The `deploy` script will push the contents of the `build` directory to your `gh-pages` branch.
+3.  **Access Your Site:**
+    GitHub will generate and display a URL for your live site (e.g., `https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/`). It might take a few minutes for the site to become available after you save the settings.
 
-4.  **Deploy:**
-    Run the deployment script from your terminal.
-    ```bash
-    npm run deploy
-    ```
-    This will build your application and publish it to GitHub Pages.
+    That's it! Your hotel management dashboard is now live. Because the project uses root-relative paths for scripts (`/index.tsx`), it works correctly out-of-the-box on GitHub Pages.
 
 ---
 
