@@ -1,29 +1,27 @@
 
-
 import React from 'react';
-import Table, { Column } from '../components/common/Table';
+import Table from '../components/common/Table';
 import Button from '../components/common/Button';
-import { OccupancyReport, RevenueReport } from '../types';
 import { mockOccupancy, mockRevenue } from '../data';
 import OccupancyChart from '../components/reports/OccupancyChart';
 import RevenueChart from '../components/reports/RevenueChart';
 import Card from '../components/common/Card';
 
-const ReportsPage: React.FC = () => {
-  const occupancyColumns: Column<OccupancyReport & { id: string }>[] = [
+const ReportsPage = () => {
+  const occupancyColumns = [
     { header: 'Date', accessor: 'date', sortable: true },
     { header: 'Occupied Rooms', accessor: 'occupiedRooms', sortable: true },
     { header: 'Available Rooms', accessor: 'availableRooms', sortable: true },
     { header: 'Occupancy Rate', accessor: (item) => `${item.occupancyRate.toFixed(1)}%`, sortable: true },
   ];
 
-  const revenueColumns: Column<RevenueReport & { id: string }>[] = [
+  const revenueColumns = [
     { header: 'Month', accessor: 'month', sortable: true },
     { header: 'Revenue', accessor: (item) => `$${item.revenue.toLocaleString()}`, sortable: true },
     { header: 'ADR', accessor: (item) => `$${item.adr.toFixed(2)}`, sortable: true },
   ];
   
-  const handleDownloadCSV = (data: any[], filename: string) => {
+  const handleDownloadCSV = (data, filename) => {
       if (data.length === 0) return;
       const headers = Object.keys(data[0]);
       const csvContent = "data:text/csv;charset=utf-8," 
@@ -45,7 +43,8 @@ const ReportsPage: React.FC = () => {
         </div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-neutral-700 dark:text-neutral-300">Detailed Data</h3>
-          <Button variant="secondary" onClick={() => handleDownloadCSV(mockOccupancy, 'occupancy_report')}>Download CSV</Button>
+          {/* FIX: Add missing className prop. */}
+          <Button variant="secondary" onClick={() => handleDownloadCSV(mockOccupancy, 'occupancy_report')} className="">Download CSV</Button>
         </div>
         <Table columns={occupancyColumns} data={mockOccupancy.map(o => ({ ...o, id: o.date }))} />
       </Card>
@@ -56,7 +55,8 @@ const ReportsPage: React.FC = () => {
         </div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-neutral-700 dark:text-neutral-300">Detailed Data</h3>
-           <Button variant="secondary" onClick={() => handleDownloadCSV(mockRevenue, 'revenue_report')}>Download CSV</Button>
+           {/* FIX: Add missing className prop. */}
+           <Button variant="secondary" onClick={() => handleDownloadCSV(mockRevenue, 'revenue_report')} className="">Download CSV</Button>
         </div>
         <Table columns={revenueColumns} data={mockRevenue.map(r => ({ ...r, id: r.month }))} />
       </Card>

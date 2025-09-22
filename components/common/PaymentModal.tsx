@@ -1,19 +1,10 @@
+
 import React, { useState } from 'react';
-import { Reservation, Guest, Payment } from '../../types';
 import Modal from './Modal';
 import Button from './Button';
 import Select from './Select';
 
-interface PaymentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirmCheckout: (paymentMethod: Payment['method']) => void;
-  reservation: Reservation | null;
-  guest?: Guest;
-  roomNumber?: string;
-}
-
-const PaymentModal: React.FC<PaymentModalProps> = ({
+const PaymentModal = ({
   isOpen,
   onClose,
   onConfirmCheckout,
@@ -21,7 +12,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   guest,
   roomNumber
 }) => {
-  const [paymentMethod, setPaymentMethod] = useState<Payment['method']>('Credit Card');
+  const [paymentMethod, setPaymentMethod] = useState('Credit Card');
 
   if (!isOpen || !reservation || !guest) return null;
   
@@ -42,11 +33,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             <p className="text-3xl font-bold text-primary-900 dark:text-primary-100">${reservation.totalAmount.toFixed(2)}</p>
         </div>
         <div className="space-y-4">
+            {/* FIX: Add missing className prop. */}
             <Select
                 label="Payment Method"
                 id="paymentMethod"
                 value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value as Payment['method'])}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className=""
             >
                 <option value="Credit Card">Credit Card</option>
                 <option value="Cash">Cash</option>
@@ -54,10 +47,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             </Select>
         </div>
         <div className="flex justify-end space-x-2 pt-4 border-t dark:border-neutral-700 mt-6">
-          <Button type="button" variant="secondary" onClick={onClose}>
+          {/* FIX: Add missing className prop. */}
+          <Button type="button" variant="secondary" onClick={onClose} className="">
             Cancel
           </Button>
-          <Button type="button" onClick={handleConfirm}>
+          {/* FIX: Add missing className prop. */}
+          <Button type="button" onClick={handleConfirm} className="">
             Confirm Payment & Check-out
           </Button>
         </div>

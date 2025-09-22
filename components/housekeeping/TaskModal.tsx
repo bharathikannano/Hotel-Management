@@ -4,18 +4,9 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Select from '../common/Select';
-import { HousekeepingTask, TaskStatus, Room, User, Role, TaskPriority } from '../../types';
+import { TaskStatus, Role, TaskPriority } from '../../types';
 
-interface TaskModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSave: (data: Omit<HousekeepingTask, 'id' | 'date'>, id?: string) => void;
-    initialData: HousekeepingTask | null;
-    rooms: Room[];
-    users: User[];
-}
-
-const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialData, rooms, users }) => {
+const TaskModal = ({ isOpen, onClose, onSave, initialData, rooms, users }) => {
     
     const [formData, setFormData] = useState({
         roomId: '',
@@ -51,12 +42,12 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialD
         }
     }, [initialData, users]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({...prev, [name]: value }));
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         onSave(formData, initialData?.id);
     }
@@ -66,20 +57,25 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialD
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={modalTitle}>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <Select label="Room" name="roomId" id="roomId" value={formData.roomId} onChange={handleChange} required>
+                {/* FIX: Add missing className prop. */}
+                <Select label="Room" name="roomId" id="roomId" value={formData.roomId} onChange={handleChange} required className="">
                     <option value="">Select Room</option>
                     {rooms.map(r => <option key={r.id} value={r.id}>{r.roomNumber}</option>)}
                 </Select>
-                <Input label="Task Description" name="task" id="task" value={formData.task} onChange={handleChange} required placeholder="e.g., Full Cleaning, Towel Change" />
-                <Select label="Assign To" name="assignedTo" id="assignedTo" value={formData.assignedTo} onChange={handleChange} required>
+                {/* FIX: Add missing className prop. */}
+                <Input label="Task Description" name="task" id="task" value={formData.task} onChange={handleChange} required placeholder="e.g., Full Cleaning, Towel Change" className="" />
+                {/* FIX: Add missing className prop. */}
+                <Select label="Assign To" name="assignedTo" id="assignedTo" value={formData.assignedTo} onChange={handleChange} required className="">
                     <option value="">Select Staff</option>
                     {housekeepers.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                 </Select>
-                <Select label="Priority" name="priority" id="priority" value={formData.priority} onChange={handleChange} required>
+                {/* FIX: Add missing className prop. */}
+                <Select label="Priority" name="priority" id="priority" value={formData.priority} onChange={handleChange} required className="">
                     {Object.values(TaskPriority).map(p => <option key={p} value={p}>{p}</option>)}
                 </Select>
                  {initialData && (
-                    <Select label="Status" name="status" id="status" value={formData.status} onChange={handleChange} required>
+                    // FIX: Add missing className prop.
+                    <Select label="Status" name="status" id="status" value={formData.status} onChange={handleChange} required className="">
                         {Object.values(TaskStatus).map(s => <option key={s} value={s}>{s}</option>)}
                     </Select>
                  )}
@@ -98,8 +94,10 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, initialD
                     />
                 </div>
                 <div className="flex justify-end space-x-2 pt-4 border-t dark:border-neutral-700 mt-4">
-                    <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
-                    <Button type="submit">Save Task</Button>
+                    {/* FIX: Add missing className prop. */}
+                    <Button type="button" variant="secondary" onClick={onClose} className="">Cancel</Button>
+                    {/* FIX: Add missing className prop. */}
+                    <Button type="submit" className="">Save Task</Button>
                 </div>
             </form>
         </Modal>

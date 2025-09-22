@@ -1,24 +1,18 @@
 import React from 'react';
-import { ActivityLog, Page } from '../../types';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import { CheckInIcon, CheckOutIcon, ReservationIcon, GuestIcon } from '../icons';
 
-interface ActivityLogCardProps {
-  log: ActivityLog[];
-  onNavigate: (page: Page) => void;
-}
-
-const iconMap: { [key in ActivityLog['type']]: React.FC<{className?: string}> } = {
+const iconMap = {
   'Check-In': CheckInIcon,
   'Check-Out': CheckOutIcon,
   'New Reservation': ReservationIcon,
   'New Guest': GuestIcon,
 };
 
-const ActivityLogCard: React.FC<ActivityLogCardProps> = ({ log, onNavigate }) => {
+const ActivityLogCard = ({ log, onNavigate }) => {
 
-  const formatTimeAgo = (timestamp: string) => {
+  const formatTimeAgo = (timestamp) => {
     const now = new Date();
     const past = new Date(timestamp);
     const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);

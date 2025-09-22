@@ -1,19 +1,14 @@
+
 import React, { useState } from 'react';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
-import { User } from '../types';
 
-interface LoginPageProps {
-  onLogin: (user: User) => void;
-  users: User[];
-}
-
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin, users }) => {
+const LoginPage = ({ onLogin, users }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     const user = users.find(u => u.username === username);
     if (user) {
@@ -37,6 +32,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, users }) => {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div className="rounded-md shadow-sm -space-y-px">
+            {/* FIX: Add missing className prop. */}
             <Input
               id="username"
               name="username"
@@ -47,9 +43,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, users }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username"
+              className=""
             />
             {/* The label is visually hidden but available to screen readers in a real app you might show it */}
             <div className="pt-4">
+              {/* FIX: Add missing className prop. */}
               <Input
                 id="password"
                 name="password"
@@ -60,6 +58,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, users }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password (any password works)"
+                className=""
               />
             </div>
           </div>

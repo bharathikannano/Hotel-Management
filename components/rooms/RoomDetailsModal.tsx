@@ -4,23 +4,12 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import Select from '../common/Select';
 import Input from '../common/Input';
-import { Room, RoomType, Reservation, Guest, ReservationStatus, RoomStatus } from '../../types';
+import { ReservationStatus, RoomStatus } from '../../types';
 import { RoomStatusBadge, ReservationStatusBadge } from '../common/StatusBadge';
 import ConfirmationModal from '../common/ConfirmationModal';
 import { WifiIcon, TvIcon, AcIcon, MiniBarIcon, JacuzziIcon, BalconyIcon, BedroomsIcon, CloseIcon } from '../icons';
 
-interface RoomDetailsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  room: Room | null;
-  roomType: RoomType | undefined;
-  reservations: Reservation[];
-  guestsMap: Map<string, Guest>;
-  onUpdateRoomStatus: (roomId: string, newStatus: RoomStatus) => void;
-  onSaveRoomType: (roomTypeId: string, updatedData: { amenities: string[]; basePrice: number; }) => void;
-}
-
-const amenityIcons: { [key: string]: React.FC<{ className?: string }> } = {
+const amenityIcons = {
   'Wifi': WifiIcon,
   'TV': TvIcon,
   'AC': AcIcon,
@@ -30,7 +19,7 @@ const amenityIcons: { [key: string]: React.FC<{ className?: string }> } = {
   '2 Bedrooms': BedroomsIcon,
 };
 
-const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
+const RoomDetailsModal = ({
   isOpen,
   onClose,
   room,
@@ -41,11 +30,11 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
   onSaveRoomType,
 }) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [pendingStatus, setPendingStatus] = useState<RoomStatus | null>(null);
+  const [pendingStatus, setPendingStatus] = useState(null);
   
   // Editing state
   const [isEditing, setIsEditing] = useState(false);
-  const [currentAmenities, setCurrentAmenities] = useState<string[]>([]);
+  const [currentAmenities, setCurrentAmenities] = useState([]);
   const [newAmenity, setNewAmenity] = useState('');
   const [currentBasePrice, setCurrentBasePrice] = useState('');
 
@@ -61,7 +50,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
 
   if (!isOpen || !room || !roomType) return null;
 
-  const handleStatusChange = (newStatus: RoomStatus) => {
+  const handleStatusChange = (newStatus) => {
     if (newStatus !== room.status) {
         setPendingStatus(newStatus);
         setIsConfirmOpen(true);
@@ -81,11 +70,11 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
       setPendingStatus(null);
   };
   
-  const handleRemoveAmenity = (amenityToRemove: string) => {
+  const handleRemoveAmenity = (amenityToRemove) => {
     setCurrentAmenities(prev => prev.filter(a => a !== amenityToRemove));
   };
 
-  const handleAddAmenity = (e: React.FormEvent) => {
+  const handleAddAmenity = (e) => {
       e.preventDefault();
       const trimmedAmenity = newAmenity.trim();
       if (trimmedAmenity && !currentAmenities.find(a => a.toLowerCase() === trimmedAmenity.toLowerCase())) {
@@ -146,7 +135,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
                   label=""
                   id="roomStatus"
                   value={room.status}
-                  onChange={(e) => handleStatusChange(e.target.value as RoomStatus)}
+                  onChange={(e) => handleStatusChange(e.target.value)}
                   className="!py-1.5"
                 >
                   {Object.values(RoomStatus)
@@ -250,11 +239,14 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
           <div className="flex justify-end space-x-2 pt-4 border-t dark:border-neutral-700 mt-6">
             {isEditing ? (
               <>
-                <Button variant="secondary" onClick={handleCancelEdit}>Cancel</Button>
-                <Button onClick={handleSaveChanges}>Save Changes</Button>
+                {/* FIX: Add missing className prop. */}
+                <Button variant="secondary" onClick={handleCancelEdit} className="">Cancel</Button>
+                {/* FIX: Add missing className prop. */}
+                <Button onClick={handleSaveChanges} className="">Save Changes</Button>
               </>
             ) : (
-              <Button variant="secondary" onClick={onClose}>
+              // FIX: Add missing className prop.
+              <Button variant="secondary" onClick={onClose} className="">
                 Close
               </Button>
             )}

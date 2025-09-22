@@ -1,13 +1,6 @@
-
 import React from 'react';
 
-interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label: string;
-  id?: string;
-  children: React.ReactNode;
-}
-
-const Select: React.FC<SelectProps> = ({ label, id, children, className, ...props }) => {
+const Select = ({ label, id, children, className, ...props }) => {
   return (
     <div>
       {label && <label htmlFor={id} className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">

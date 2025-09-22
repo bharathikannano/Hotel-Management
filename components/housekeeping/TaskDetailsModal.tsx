@@ -1,18 +1,10 @@
+
 import React from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-import { HousekeepingTask, Room, User } from '../../types';
 import { TaskStatusBadge, PriorityBadge } from '../common/StatusBadge';
 
-interface TaskDetailsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  task: HousekeepingTask | null;
-  room: Room | undefined;
-  assignedUser: User | undefined;
-}
-
-const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
+const TaskDetailsModal = ({
   isOpen,
   onClose,
   task,
@@ -58,7 +50,8 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         )}
 
         <div className="flex justify-end pt-4 border-t dark:border-neutral-700 mt-6">
-          <Button variant="secondary" onClick={onClose}>
+          {/* FIX: Add missing className prop. */}
+          <Button variant="secondary" onClick={onClose} className="">
             Close
           </Button>
         </div>

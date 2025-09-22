@@ -1,32 +1,24 @@
+
 import React, { useState, useMemo } from 'react';
-import Table, { Column } from '../components/common/Table';
+import Table from '../components/common/Table';
 import Button from '../components/common/Button';
-import { HousekeepingTask, Room, User, Role } from '../types';
 import { TaskStatusBadge, PriorityBadge } from '../components/common/StatusBadge';
 import { EditIcon, DeleteIcon, InfoIcon } from '../components/icons';
 import ConfirmationModal from '../components/common/ConfirmationModal';
 import TaskDetailsModal from '../components/housekeeping/TaskDetailsModal';
+import { Role } from '../types';
 
 
-interface HousekeepingPageProps {
-    tasks: HousekeepingTask[];
-    rooms: Room[];
-    users: User[];
-    onOpenModal: (task: HousekeepingTask | null) => void;
-    onDeleteTask: (id: string) => void;
-    currentUser: User;
-}
-
-const HousekeepingPage: React.FC<HousekeepingPageProps> = ({ tasks, rooms, users, onOpenModal, onDeleteTask, currentUser }) => {
+const HousekeepingPage = ({ tasks, rooms, users, onOpenModal, onDeleteTask, currentUser }) => {
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-    const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+    const [taskToDelete, setTaskToDelete] = useState(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-    const [viewingTask, setViewingTask] = useState<HousekeepingTask | null>(null);
+    const [viewingTask, setViewingTask] = useState(null);
 
     const usersMap = useMemo(() => new Map(users.map(u => [u.id, u])), [users]);
     const roomsMap = useMemo(() => new Map(rooms.map(r => [r.id, r])), [rooms]);
 
-    const handleOpenDetailsModal = (task: HousekeepingTask) => {
+    const handleOpenDetailsModal = (task) => {
         setViewingTask(task);
         setIsDetailsModalOpen(true);
     };
@@ -36,7 +28,7 @@ const HousekeepingPage: React.FC<HousekeepingPageProps> = ({ tasks, rooms, users
         setViewingTask(null);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = (id) => {
         setTaskToDelete(id);
         setIsDeleteConfirmOpen(true);
     };
@@ -53,7 +45,7 @@ const HousekeepingPage: React.FC<HousekeepingPageProps> = ({ tasks, rooms, users
         setTaskToDelete(null);
     };
 
-    const columns: Column<HousekeepingTask>[] = [
+    const columns = [
         { header: 'Room', accessor: (item) => roomsMap.get(item.roomId)?.roomNumber || 'N/A', sortable: true, sortKey: 'roomId' },
         { header: 'Task', accessor: 'task', sortable: true },
         { header: 'Assigned To', accessor: (item) => usersMap.get(item.assignedTo)?.name || 'N/A', sortable: true, sortKey: 'assignedTo' },
@@ -66,7 +58,8 @@ const HousekeepingPage: React.FC<HousekeepingPageProps> = ({ tasks, rooms, users
         <div className="space-y-6">
              <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">Housekeeping Schedule</h2>
-                <Button onClick={() => onOpenModal(null)}>New Task</Button>
+                {/* FIX: Add missing className prop. */}
+                <Button onClick={() => onOpenModal(null)} className="">New Task</Button>
             </div>
             <Table
                 columns={columns}

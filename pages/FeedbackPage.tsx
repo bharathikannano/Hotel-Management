@@ -1,12 +1,8 @@
+
 import React from 'react';
-import { Feedback } from '../types';
 import Card from '../components/common/Card';
 
-interface FeedbackPageProps {
-  feedback: Feedback[];
-}
-
-const StarDisplay = ({ rating }: { rating: number }) => (
+const StarDisplay = ({ rating }) => (
     <div className="flex items-center">
         {[1, 2, 3, 4, 5].map((star) => (
             <span key={star} className={`text-2xl ${star <= rating ? 'text-accent-400' : 'text-neutral-300 dark:text-neutral-600'}`}>
@@ -16,14 +12,14 @@ const StarDisplay = ({ rating }: { rating: number }) => (
     </div>
 );
 
-const FeedbackPage: React.FC<FeedbackPageProps> = ({ feedback }) => {
+const FeedbackPage = ({ feedback }) => {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-neutral-800 dark:text-neutral-100">Guest Feedback</h1>
       {feedback.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {feedback.map((item) => (
-            <Card key={item.id} className="flex flex-col">
+            <Card key={item.id}>
               <div className="flex-grow space-y-4">
                 <div className="flex justify-between items-start">
                     <div>

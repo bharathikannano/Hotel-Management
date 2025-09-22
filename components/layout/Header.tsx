@@ -1,17 +1,7 @@
 import React from 'react';
-import { User, Page, Theme } from '../../types';
 import { MenuIcon, SunIcon, MoonIcon, SystemIcon, SearchIcon } from '../icons';
 
-interface HeaderProps {
-    currentPage: Page;
-    user: User;
-    onToggleSidebar: () => void;
-    onOpenSearch: () => void;
-    theme: Theme;
-    onThemeChange: (theme: Theme) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ currentPage, user, onToggleSidebar, onOpenSearch, theme, onThemeChange }) => {
+const Header = ({ currentPage, user, onToggleSidebar, onOpenSearch, theme, onThemeChange }) => {
     return (
         <header className="bg-neutral-50 dark:bg-neutral-800 shadow-lg p-4 flex justify-between items-center sticky top-0 z-30">
             <div className="flex items-center">

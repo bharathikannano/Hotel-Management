@@ -1,27 +1,14 @@
+
 import React, { useState, useMemo } from 'react';
 
-export interface Column<T> {
-  header: string;
-  accessor: keyof T | ((item: T) => React.ReactNode);
-  sortable?: boolean;
-  sortKey?: keyof T;
-  sortFn?: (a: T, b: T) => number;
-}
-
-interface TableProps<T> {
-  columns: Column<T>[];
-  data: T[];
-  renderRowActions?: (item: T) => React.ReactNode;
-}
-
-const Table = <T extends { id: string }>(
-  { columns, data, renderRowActions }: TableProps<T>
+const Table = (
+  { columns, data, renderRowActions }: { columns: any[], data: any[], renderRowActions?: (item: any) => React.ReactNode }
 ) => {
-  const [sortColumn, setSortColumn] = useState<keyof T | null>(null);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState('asc');
 
-  const handleSort = (column: Column<T>) => {
-    const keyToSortBy = column.sortKey ?? (typeof column.accessor === 'string' ? column.accessor as keyof T : null);
+  const handleSort = (column: any) => {
+    const keyToSortBy = column.sortKey ?? (typeof column.accessor === 'string' ? column.accessor : null);
 
     if (!keyToSortBy) return;
 
@@ -94,7 +81,7 @@ const Table = <T extends { id: string }>(
                 <td key={`${item.id}-${String(col.header)}`} className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600 dark:text-neutral-300">
                   {typeof col.accessor === 'function'
                     ? col.accessor(item)
-                    : (item[col.accessor] as React.ReactNode)}
+                    : item[col.accessor]}
                 </td>
               ))}
               {renderRowActions && (

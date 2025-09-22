@@ -1,13 +1,7 @@
+
 import React from 'react';
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-  actions?: React.ReactNode;
-}
-
-const Card: React.FC<CardProps> = ({ children, className = '', title, actions }) => {
+const Card = ({ children, className = '', title, actions }: { children: React.ReactNode; className?: string; title?: string; actions?: React.ReactNode; }) => {
   return (
     <div className={`bg-neutral-50 dark:bg-neutral-800 rounded-2xl shadow-solid-light dark:shadow-solid-dark ${className}`}>
       {(title || actions) && (

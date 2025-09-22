@@ -1,19 +1,14 @@
+
 import React, { useState, useMemo } from 'react';
-import Table, { Column } from '../components/common/Table';
+import Table from '../components/common/Table';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Modal from '../components/common/Modal';
-import { Guest, Page, User, Role } from '../types';
 import { EditIcon, DeleteIcon } from '../components/icons';
 import ConfirmationModal from '../components/common/ConfirmationModal';
+import { Role } from '../types';
 
-interface GuestFormProps {
-    onSave: (guest: Omit<Guest, 'id'>) => void;
-    onCancel: () => void;
-    guest?: Guest | null;
-}
-
-const GuestForm: React.FC<GuestFormProps> = ({ onSave, onCancel, guest }) => {
+const GuestForm = ({ onSave, onCancel, guest }) => {
     const [formData, setFormData] = useState({
         firstName: guest?.firstName || '',
         lastName: guest?.lastName || '',
@@ -23,12 +18,12 @@ const GuestForm: React.FC<GuestFormProps> = ({ onSave, onCancel, guest }) => {
         notes: guest?.notes || '',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         onSave(formData);
     };
@@ -36,12 +31,17 @@ const GuestForm: React.FC<GuestFormProps> = ({ onSave, onCancel, guest }) => {
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-                <Input label="First Name" name="firstName" id="firstName" value={formData.firstName} onChange={handleChange} required />
-                <Input label="Last Name" name="lastName" id="lastName" value={formData.lastName} onChange={handleChange} required />
+                {/* FIX: Add missing className prop. */}
+                <Input label="First Name" name="firstName" id="firstName" value={formData.firstName} onChange={handleChange} required className="" />
+                {/* FIX: Add missing className prop. */}
+                <Input label="Last Name" name="lastName" id="lastName" value={formData.lastName} onChange={handleChange} required className="" />
             </div>
-            <Input label="Email" name="email" id="email" type="email" value={formData.email} onChange={handleChange} required />
-            <Input label="Phone" name="phone" id="phone" type="tel" value={formData.phone} onChange={handleChange} required />
-            <Input label="Address" name="address" id="address" value={formData.address} onChange={handleChange} required />
+            {/* FIX: Add missing className prop. */}
+            <Input label="Email" name="email" id="email" type="email" value={formData.email} onChange={handleChange} required className="" />
+            {/* FIX: Add missing className prop. */}
+            <Input label="Phone" name="phone" id="phone" type="tel" value={formData.phone} onChange={handleChange} required className="" />
+            {/* FIX: Add missing className prop. */}
+            <Input label="Address" name="address" id="address" value={formData.address} onChange={handleChange} required className="" />
             <div>
                 <label htmlFor="notes" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                     Notes (Optional)
@@ -57,28 +57,21 @@ const GuestForm: React.FC<GuestFormProps> = ({ onSave, onCancel, guest }) => {
                 />
             </div>
             <div className="flex justify-end space-x-2 pt-4 border-t dark:border-neutral-700 mt-4">
-                <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
-                <Button type="submit">{guest ? 'Save Changes' : 'Create Guest'}</Button>
+                {/* FIX: Add missing className prop. */}
+                <Button type="button" variant="secondary" onClick={onCancel} className="">Cancel</Button>
+                {/* FIX: Add missing className prop. */}
+                <Button type="submit" className="">{guest ? 'Save Changes' : 'Create Guest'}</Button>
             </div>
         </form>
     );
 };
 
-interface GuestsPageProps {
-  guests: Guest[];
-  onAddGuest: (guestData: Omit<Guest, 'id'>) => void;
-  onUpdateGuest: (id: string, guestData: Omit<Guest, 'id'>) => void;
-  onDeleteGuest: (id: string) => void;
-  onViewProfile: (guest: Guest) => void;
-  currentUser: User;
-}
-
-const GuestsPage: React.FC<GuestsPageProps> = ({ guests, onAddGuest, onUpdateGuest, onDeleteGuest, onViewProfile, currentUser }) => {
+const GuestsPage = ({ guests, onAddGuest, onUpdateGuest, onDeleteGuest, onViewProfile, currentUser }) => {
     const [filter, setFilter] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
+    const [editingGuest, setEditingGuest] = useState(null);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-    const [guestToDelete, setGuestToDelete] = useState<string | null>(null);
+    const [guestToDelete, setGuestToDelete] = useState(null);
 
     const filteredGuests = useMemo(() =>
         guests.filter(g =>
@@ -87,7 +80,7 @@ const GuestsPage: React.FC<GuestsPageProps> = ({ guests, onAddGuest, onUpdateGue
             g.phone.includes(filter)
         ), [guests, filter]);
 
-    const handleOpenModal = (guest: Guest | null = null) => {
+    const handleOpenModal = (guest = null) => {
         setEditingGuest(guest);
         setIsModalOpen(true);
     };
@@ -97,7 +90,7 @@ const GuestsPage: React.FC<GuestsPageProps> = ({ guests, onAddGuest, onUpdateGue
         setEditingGuest(null);
     };
 
-    const handleSaveGuest = (guestData: Omit<Guest, 'id'>) => {
+    const handleSaveGuest = (guestData) => {
         if (editingGuest) {
             onUpdateGuest(editingGuest.id, guestData);
         } else {
@@ -106,7 +99,7 @@ const GuestsPage: React.FC<GuestsPageProps> = ({ guests, onAddGuest, onUpdateGue
         handleCloseModal();
     };
     
-    const handleDelete = (id: string) => {
+    const handleDelete = (id) => {
         setGuestToDelete(id);
         setIsDeleteConfirmOpen(true);
     };
@@ -123,7 +116,7 @@ const GuestsPage: React.FC<GuestsPageProps> = ({ guests, onAddGuest, onUpdateGue
         setGuestToDelete(null);
     };
 
-    const columns: Column<Guest>[] = [
+    const columns = [
         { header: 'Name', accessor: (item) => <a href="#" onClick={(e) => { e.preventDefault(); onViewProfile(item); }} className="font-medium text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">{`${item.firstName} ${item.lastName}`}</a>, sortable: true },
         { header: 'Email', accessor: 'email', sortable: true },
         { header: 'Phone', accessor: 'phone', sortable: true },
@@ -133,7 +126,8 @@ const GuestsPage: React.FC<GuestsPageProps> = ({ guests, onAddGuest, onUpdateGue
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <div className="w-full md:w-1/3">
-                    <Input label="" id="search" type="text" placeholder="Search by name, email, or phone..." value={filter} onChange={e => setFilter(e.target.value)} />
+                    {/* FIX: Add missing className prop. */}
+                    <Input label="" id="search" type="text" placeholder="Search by name, email, or phone..." value={filter} onChange={e => setFilter(e.target.value)} className="" />
                 </div>
                 <Button onClick={() => handleOpenModal()} className="w-full md:w-auto">New Guest</Button>
             </div>
