@@ -159,6 +159,7 @@ The `components/common/` directory contains the building blocks of the UI:
 
 - A modern web browser (e.g., Chrome, Firefox, Safari, Edge).
 - A simple local web server. The [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension for VS Code is a great option.
+- [Node.js and npm](https://nodejs.org/en/download/) (for deployment).
 
 ### 6.2. Installation & Launch
 
@@ -180,22 +181,32 @@ Use any of the following usernames to log in. **Any password will be accepted.**
 
 ## 7. Deployment to GitHub Pages
 
-This project is a zero-build environment, which makes deploying to GitHub Pages very straightforward. No build process or special packages are needed.
+This project is configured for easy deployment to GitHub Pages using the `gh-pages` package.
 
-1.  **Repository Setup:**
-    Ensure all your project files (`index.html`, `index.tsx`, etc.) are committed and pushed to a GitHub repository.
+### 7.1. Prerequisites
 
-2.  **Enable GitHub Pages:**
-    - Navigate to your repository on GitHub.
-    - Click on the **Settings** tab.
-    - In the left sidebar, click on **Pages**.
-    - Under "Build and deployment", for the "Source", select **Deploy from a branch**.
-    - Under "Branch", select your main branch (`main` or `master`), keep the folder as `/ (root)`, and click **Save**.
+- Your project must be a GitHub repository and pushed to GitHub.
 
-3.  **Access Your Site:**
-    GitHub will generate and display a URL for your live site (e.g., `https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/`). It might take a few minutes for the site to become available after you save the settings.
+### 7.2. Configuration
 
-    That's it! Your hotel management dashboard is now live. Because the project uses root-relative paths for scripts (`/index.tsx`), it works correctly out-of-the-box on GitHub Pages.
+1.  **Update `package.json`:** Open the `package.json` file and update the `homepage` field to match your GitHub Pages URL:
+    ```json
+    "homepage": "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME",
+    ```
+    Replace `YOUR_USERNAME` and `YOUR_REPO_NAME` with your actual GitHub username and repository name.
+
+### 7.3. Deployment Steps
+
+1.  **Install Dependencies:** Open your terminal in the project root and run:
+    ```bash
+    npm install
+    ```
+2.  **Run the Deploy Script:** Once the dependencies are installed, run the deploy command:
+    ```bash
+    npm run deploy
+    ```
+
+This will create a `gh-pages` branch (if it doesn't exist), push your project files to it, and your site will be live at the URL specified in the `homepage` field shortly.
 
 ---
 
